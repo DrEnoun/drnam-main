@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Chemistry with Dr. NAM</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Teaching hubs, games and tools by Dr. Nur 'Ainun Mokhtar (Dr. NAM), Faculty of Pharmacy, UiTM Bertam, Penang.">
+<link rel="icon" href="img/drnam-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@500;700;800&family=Questrial&display=swap">
+<style>
+/* Layout: a dark "lab bench" hero in the Dr. NAM Science Decks look, then one shelf per audience,
+   each item a card with a small element-style tile. */
+:root{
+  --bg:#F3F7F6; --surface:#FFFFFF; --ink:#11202E; --muted:#526371; --line:#D3DFDC;
+  --teal:#1C8279; --teal-soft:#DDF1EE; --spark:#D4FF3A;
+  --night:#0B1A26; --night-2:#123044; --hero-ink:#EEF6F4; --hero-muted:#A9C2C6;
+  --font-display:"League Spartan","Glacial Indifference",system-ui,sans-serif;
+  --font-body:Questrial,"Glacial Indifference",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#09141D; --surface:#102230; --ink:#E6F0EE; --muted:#9BB0B4; --line:#21384A;
+  --teal:#4CC9BD; --teal-soft:#123A3C; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#09141D; --surface:#102230; --ink:#E6F0EE; --muted:#9BB0B4; --line:#21384A;
+  --teal:#4CC9BD; --teal-soft:#123A3C; color-scheme:dark}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:1rem/1.6 var(--font-body)}
+img{max-width:100%}
+a{color:inherit}
+.wrap{max-width:1080px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+/* hero */
+.hero{background:radial-gradient(120% 140% at 85% 0%,var(--night-2) 0%,var(--night) 60%);color:var(--hero-ink);position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(212,255,58,.10) 1px,transparent 1.4px);background-size:22px 22px;pointer-events:none;
+  -webkit-mask-image:linear-gradient(90deg,transparent 30%,#000);mask-image:linear-gradient(90deg,transparent 30%,#000)}
+.hero .wrap{position:relative;z-index:1;padding-block:22px 40px}
+.bar{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.logos{display:flex;align-items:center;gap:10px}
+.logos .u{background:#fff;border-radius:10px;padding:5px 8px;height:44px;display:flex;align-items:center}
+.logos .u img{height:32px;width:auto;display:block}
+.logos .n{width:52px;height:52px;border-radius:50%;background:#fff;display:block}
+.top-links{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.top-links a{font:600 .82rem var(--font-body);letter-spacing:.04em;text-decoration:none;color:var(--hero-ink);border:1px solid rgba(238,246,244,.28);border-radius:999px;padding:5px 12px}
+.top-links a:hover,.top-links a:focus-visible{border-color:var(--spark);color:var(--spark);outline:none}
+.kick{margin:34px 0 6px;font:700 .78rem var(--font-display);letter-spacing:.18em;text-transform:uppercase;color:var(--spark)}
+h1{margin:0;font:800 clamp(2.6rem,7vw,4.6rem)/.95 var(--font-display);letter-spacing:-.02em;text-wrap:balance}
+h1 span{color:var(--spark)}
+.lede{margin:16px 0 0;max-width:58ch;color:var(--hero-muted);font-size:1.05rem}
+.who{margin:14px 0 0;font-size:.92rem;color:var(--hero-ink)}
+
+/* sections */
+main .wrap{padding-block:12px 40px}
+.shelf{padding-top:34px}
+.shelf>header{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;border-bottom:2px solid var(--ink);padding-bottom:8px}
+.shelf h2{margin:0;font:800 1.9rem/1 var(--font-display);letter-spacing:-.01em}
+.shelf>header p{margin:0;color:var(--muted);font-size:.95rem}
+.group{margin-top:18px}
+.group h3{margin:0 0 10px;font:700 .8rem var(--font-display);letter-spacing:.14em;text-transform:uppercase;color:var(--teal)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:12px}
+.grid.two{grid-template-columns:repeat(auto-fill,minmax(min(100%,420px),1fr))}
+.card{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:start;text-decoration:none;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;transition:border-color .15s,transform .15s}
+.card:hover,.card:focus-visible{border-color:var(--teal);transform:translateY(-2px);outline:none}
+.card:focus-visible{box-shadow:0 0 0 3px var(--teal-soft)}
+.tile{width:52px;height:56px;border-radius:8px;background:var(--teal-soft);color:var(--teal);display:grid;grid-template-rows:auto 1fr;padding:4px 6px;font-family:var(--font-display);line-height:1}
+.tile i{font-style:normal;font-size:.62rem;font-weight:500;opacity:.85}
+.tile b{font-size:1.3rem;font-weight:800;align-self:center;justify-self:center}
+.card .t{min-width:0}
+.card strong{display:block;font:700 1.08rem/1.2 var(--font-display);color:var(--ink)}
+.card span.d{display:block;margin-top:4px;color:var(--muted);font-size:.9rem;line-height:1.45}
+.card span.tag{display:inline-block;margin-top:8px;font-size:.74rem;letter-spacing:.06em;text-transform:uppercase;color:var(--teal)}
+.card span.tag::after{content:" ↗"}
+
+footer{border-top:1px solid var(--line)}
+footer .wrap{padding-block:20px 28px;color:var(--muted);font-size:.86rem;display:flex;flex-wrap:wrap;gap:6px 18px;justify-content:space-between}
+footer b{color:var(--ink)}
+
+@media (max-width:520px){.top-links{display:none}.kick{margin-top:26px}}
+@media (prefers-reduced-motion:reduce){.card{transition:none}.card:hover{transform:none}}
+</style>
+</head>
+<body>
+
+<section class="hero">
+ <div class="wrap">
+  <div class="bar">
+   <div class="logos"><span class="u"><img src="img/uitm.png" alt="Universiti Teknologi MARA"></span><img class="n" src="img/drnam-180.png" alt="Chemistry with Dr. NAM logo"></div>
+   <nav class="top-links" aria-label="Sections"><a href="#uitm">UiTM</a><a href="#public">Public</a><a href="#stem">STEM</a></nav>
+  </div>
+  <p class="kick">One link · every hub, game and tool</p>
+  <h1>Chemistry with <span>Dr. NAM</span></h1>
+  <p class="lede">Self-paced study hubs for my pharmacy courses, chemistry games you can play with your hands, and step-by-step tools for drug design and research.</p>
+  <p class="who">Dr. Nur 'Ainun Mokhtar · Faculty of Pharmacy, UiTM Bertam, Penang</p>
+ </div>
+</section>
+
+<main>
+ <div class="wrap">
+
+  <section class="shelf" id="uitm">
+   <header><h2>UiTM</h2><p>For my students and fellow lecturers.</p></header>
+
+   <div class="group">
+    <h3>Students</h3>
+    <div class="grid">
+     <a class="card" href="https://drenoun.github.io/phd115-nam/" target="_blank" rel="noopener"><span class="tile" aria-hidden="true"><i>PHD</i><b>115</b></span><span class="t"><strong>PHD115 Study Hub</strong><span class="d">Fundamentals of Chemistry. Warm-ups, slides, after-class checks, tutorials and games for every chapter.</span><span class="tag">Diploma in Pharmacy</span></span></a>
+     <a class="card" href="https://drenoun.github.io/phd125-nam/" target="_blank" rel="noopener"><span class="tile" aria-hidden="true"><i>PHD</i><b>125</b></span><span class="t"><strong>PHD125 Study Hub</strong><span class="d">Pharmaceutical Organic Chemistry. Eight chapters with slides, tutorials and games.</span><span class="tag">Diploma in Pharmacy</span></span></a>
+     <a class="card" href="https://drenoun.github.io/dr-nam-virtual-secret-lab/" target="_blank" rel="noopener"><span class="tile" aria-hidden="true"><i>Lab</i><b>Sl</b></span><span class="t"><strong>Virtual Secret Lab</strong><span class="d">Hand-gesture chemistry games: build Lewis structures and molecules with your webcam, mouse or touch.</span><span class="tag">Game · BM / EN</span></span></a>
+     <a class="card" href="https://drenoun.github.io/drnam-chemquest-world/" target="_blank" rel="noopener"><span class="tile" aria-hidden="true"><i>9W</i><b>Cq</b></span><span class="t"><strong>Dr. NAM's ChemQuest</strong><span class="d">Pixel-style adventure across nine worlds: match names, formulae and shapes, serve ionic compounds and balance equations.</span><span class="tag">Game · PHD115</span></span></a>
+     <a class="card" href="https://drenoun.github.io/Functional-group-game/" target="_blank" rel="noopener"><span class="tile" aria-hidden="true"><i>P2</i><b>Rr</b></span><span class="t"><strong>Rune Rush Arcade</strong><span class="d">Arcade game on functional groups for PHD125 Lab Practical 2.</span><span class="tag">Game · PHD125</span></span></a>
+     <a class="card" href="https://drenoun.github.io/medsafetygame/" target="_blank" rel="noopener"><span class="tile" aria-hidden="true"><i>Rx</i><b>Ms</b></span><span class="t"><strong>Pharmacy Safety Hunt</strong><span class="d">Spot the medication safety errors before they reach the patient.</span><span class="tag">Game</span></span></a>
+    </div>
+   </div>
+
+   <div class="group">
+    <h3>Lecturers</h3>
+    <div class="grid">
+     <a class="card" href="https://drenoun.github.io/geminicanvas/" target="_blank" rel="noopener"><span class="tile" aria-hidden="true"><i>AI</i><b>Gc</b></span><span class="t"><strong>Gemini Canvas for Educators</strong><span class="d">Workshop: turn a teaching idea into an interactive, no-code learning activity, with sources from NotebookLM.</span><span class="tag">Workshop</span></span></a>
+     <a class="card" href="https://drenoun.github.io/Review-Paper-Prompt-Builder/" target="_blank" rel="noopener"><span class="tile" aria-hidden="true"><i>AI</i><b>Rp</b></span><span class="t"><strong>Review Paper Prompt Builder</strong><span class="d">Build structured AI prompts for planning and writing a review paper.</span><span class="tag">Research tool</span></span></a>
+    </div>
+   </div>
+  </section>
+
+  <section class="shelf" id="public">
+   <header><h2>Public</h2><p>Open to anyone: future pharmacy students, researchers and the curious.</p></header>
+   <div class="group">
+    <div class="grid">
+     <a class="card" href="https://drenoun.github.io/drnam_chemistry_around_you/" target="_blank" rel="noopener"><span class="tile" aria-hidden="true"><i>Daily</i><b>Ca</b></span><span class="t"><strong>Chemistry Around You</strong><span class="d">Everyday life explained through simple chemistry. No science background needed.</span><span class="tag">Science for everyone</span></span></a>
+     <a class="card" href="https://drenoun.github.io/misiakademikgame/" target="_blank" rel="noopener"><span class="tile" aria-hidden="true"><i>Dip</i><b>Pq</b></span><span class="t"><strong>Pharmacy Quest</strong><span class="d">Career Carnival game: learn what pharmacists do and discover the Diploma in Pharmacy at UiTM Bertam.</span><span class="tag">Game · Career</span></span></a>
+     <a class="card" href="https://drenoun.github.io/cadd-with-drnam/" target="_blank" rel="noopener"><span class="tile" aria-hidden="true"><i>CADD</i><b>Cd</b></span><span class="t"><strong>CADD with Dr. NAM</strong><span class="d">Interactive simulations of computer-aided drug design: docking, virtual screening, ADME and homology modelling.</span><span class="tag">Drug design</span></span></a>
+     <a class="card" href="https://drenoun.github.io/NAM-DOCKeasy/" target="_blank" rel="noopener"><span class="tile" aria-hidden="true"><i>Dock</i><b>De</b></span><span class="t"><strong>NAM-DOCKeasy</strong><span class="d">A step-by-step framework for running molecular docking.</span><span class="tag">Research tool</span></span></a>
+     <a class="card" href="https://drenoun.github.io/NAM-NPeasy/" target="_blank" rel="noopener"><span class="tile" aria-hidden="true"><i>Net</i><b>Np</b></span><span class="t"><strong>NAM-NPeasy</strong><span class="d">Beginner's guide to network pharmacology for herbal and natural products.</span><span class="tag">Research tool</span></span></a>
+    </div>
+   </div>
+  </section>
+
+  <section class="shelf" id="stem">
+   <header><h2>STEM</h2><p>Hands-on activities for schools and STEM events.</p></header>
+   <div class="group">
+    <div class="grid">
+     <a class="card" href="https://drenoun.github.io/stemdesignthinking/" target="_blank" rel="noopener"><span class="tile" aria-hidden="true"><i>MYIO</i><b>Dt</b></span><span class="t"><strong>Kaedah Inovasi: Design Thinking</strong><span class="d">Slides, four games and printable notes, made for the 14th MYIO 2026 Karnival Mini STEM.</span><span class="tag">Innovation · BM</span></span></a>
+     <a class="card" href="https://drenoun.github.io/molecule-drop/" target="_blank" rel="noopener"><span class="tile" aria-hidden="true"><i>Game</i><b>Md</b></span><span class="t"><strong>Molecule Drop</strong><span class="d">Falling-block game on atoms, bonding, molecular shapes and functional groups, from beginner to professor level.</span><span class="tag">Game</span></span></a>
+    </div>
+   </div>
+  </section>
+
+ </div>
+</main>
+
+<footer>
+ <div class="wrap">
+  <span><b>Chemistry with Dr. NAM</b> · Faculty of Pharmacy, UiTM Cawangan Pulau Pinang, Kampus Bertam</span>
+  <span>Free for non-commercial teaching. Sources are credited inside each app.</span>
+ </div>
+</footer>
+
+</body>
+</html>
