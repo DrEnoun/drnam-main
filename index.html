@@ -376,6 +376,32 @@ details[open] p{animation:rise .4s var(--pop)}
 .card:hover,.card:focus-visible,.step:hover,.stat:hover{border-color:var(--st-edge);box-shadow:0 0 0 1px var(--st-line),0 0 26px rgba(76,201,189,.55),0 16px 26px -6px var(--st-shadow)}
 details{border-radius:18px}
 details[open]{border-color:var(--st-edge)}
+/* ===== DNA Snake ===== */
+.ptabs{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.snk{margin-top:18px}.snk[hidden],.mol[hidden]{display:none}
+.snk__stage{position:relative;border-radius:24px;overflow:hidden;background:radial-gradient(120% 120% at 50% 0%,#17414a,#0a141d 70%);border:1px solid rgba(238,246,244,.16)}
+.snk__stage canvas{display:block;width:100%;height:clamp(220px,36svh,340px);touch-action:pan-y;outline:none}
+.snk__stage canvas:focus-visible{box-shadow:inset 0 0 0 3px var(--spark)}
+.snk__ov{position:absolute;inset:0;display:grid;place-items:center;padding:14px;background:rgba(6,13,20,.55);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);text-align:center;color:#EEF6F4}
+.snk__ov[hidden]{display:none}
+.snk__card{max-width:420px;animation:rise .5s var(--pop)}
+.snk__card h3{margin:0 0 6px;font:800 clamp(1.6rem,4vw,2.3rem)/1.05 var(--font-display)}
+.snk__card h3 span{color:#ff8fa3}
+.snk__card p{margin:0 0 14px;color:#A9C2C6;font-size:.98rem}
+.snk__hud{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;margin-top:12px}
+.snk__hud .sp{flex:1}
+.snk__stat{font:700 .9rem var(--font-display);color:var(--hero-muted)}.snk__stat b{color:var(--accent)}
+.snk__msg{margin:8px 0 0;min-height:1.4em;font:600 .95rem/1.35 var(--font-body);color:var(--hero-ink)}
+.snk__seq{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;min-height:30px}
+.snk__chip{font:800 .78rem var(--font-display);color:#14202b;border-radius:999px;padding:4px 11px;border:2px solid rgba(255,255,255,.75);box-shadow:0 2px 6px rgba(0,0,0,.25);animation:pop .4s var(--pop)}
+@keyframes pop{from{transform:scale(.3);opacity:0}to{transform:none;opacity:1}}
+.snk__legend{display:flex;flex-wrap:wrap;gap:6px 12px;margin-top:10px;font-size:.8rem;color:var(--hero-muted)}
+.snk__legend i{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:5px;vertical-align:-1px;border:1.5px solid rgba(255,255,255,.7)}
+.snk__pad{display:none;grid-template-columns:repeat(3,56px);grid-template-rows:repeat(2,50px);gap:6px;justify-content:center;margin-top:12px}
+.snk__pad button{font:800 1.4rem/1 var(--font-display);border-radius:16px;border:2px solid rgba(var(--hi-rgb),.35);background:rgba(var(--hi-rgb),.08);color:var(--hero-ink);cursor:pointer;touch-action:manipulation}
+.snk__pad button:active{background:var(--spark);color:var(--on-spark);transform:scale(.94)}
+.snk__pad .u{grid-column:2;grid-row:1}.snk__pad .l{grid-column:1;grid-row:2}.snk__pad .d{grid-column:2;grid-row:2}.snk__pad .r{grid-column:3;grid-row:2}
+@media(pointer:coarse),(max-width:700px){.snk__pad{display:grid}}
 </style>
 </head>
 <body>
@@ -506,9 +532,10 @@ details[open]{border-color:var(--st-edge)}
 
  <section class="s slide slide--dark" id="play" data-t="Play"><div class="wrap">
   <p class="eyebrow">Let us play</p>
-  <h2>Poke a molecule!</h2>
-  <p class="sub">Meet my happy little molecules. Poke them, drag their atoms and zoom in to see the electrons. They love to play!</p>
-  <div class="mol">
+  <h2>Play with chemistry!</h2>
+  <p class="sub">Poke my happy little molecules, or help a cute snake collect amino acids and grow a protein chain. Pick a game!</p>
+  <div class="ptabs" role="group" aria-label="Choose a game"><button class="mbtn" type="button" data-ptab="mol" aria-pressed="true">Poke a molecule</button><button class="mbtn" type="button" data-ptab="snk" aria-pressed="false">DNA Snake</button></div>
+  <div class="mol" id="panel-mol">
    <div class="mol__chips" id="mol-chips" role="group" aria-label="Choose a molecule"></div>
    <div class="mol__stage">
     <canvas id="mol" tabindex="0" role="img" aria-label="A cute molecule you can poke. Press Enter to poke it. Plus and minus keys zoom."></canvas>
@@ -525,6 +552,28 @@ details[open]{border-color:var(--st-edge)}
     <span class="mol__count">Pokes: <b id="mol-count">0</b></span>
    </div>
    <p class="mol__hint">Tap to poke. Drag an atom to stretch the molecule. Zoom in to see the electrons.</p>
+  </div>
+  <div class="snk" id="panel-snk" hidden>
+   <div class="snk__stage">
+    <canvas id="snk" tabindex="0" role="img" aria-label="DNA Snake game. Use the arrow keys or WASD to steer the snake and collect amino acids."></canvas>
+    <div class="snk__ov" id="snk-ov">
+     <div class="snk__card">
+      <h3 id="snk-title">DNA <span>Snake</span></h3>
+      <p id="snk-text">Steer the cute snake to eat amino acids. Each one joins its tail and grows your protein chain. Use the arrow keys or the buttons. Do not bump into yourself!</p>
+      <button class="mbtn mbtn--go" id="snk-start" type="button">Start</button>
+     </div>
+    </div>
+   </div>
+   <div class="snk__hud">
+    <span class="snk__stat">Protein length: <b id="snk-len">1</b></span>
+    <span class="snk__stat">Best: <b id="snk-best">1</b></span>
+    <span class="sp"></span>
+    <button class="mbtn" id="snk-pause" type="button">Pause</button>
+   </div>
+   <p class="snk__msg" id="snk-msg" aria-live="polite">Collect amino acids to grow!</p>
+   <div class="snk__seq" id="snk-seq" aria-label="Your protein chain"></div>
+   <div class="snk__legend" aria-hidden="true"><span><i style="background:#ffb3c7"></i>Nonpolar</span><span><i style="background:#9fd8ff"></i>Polar</span><span><i style="background:#ffd98f"></i>Acidic</span><span><i style="background:#b9f58a"></i>Basic</span></div>
+   <div class="snk__pad" aria-label="Steering buttons"><button class="u" type="button" data-d="u" aria-label="Up">&#9650;</button><button class="l" type="button" data-d="l" aria-label="Left">&#9664;</button><button class="d" type="button" data-d="d" aria-label="Down">&#9660;</button><button class="r" type="button" data-d="r" aria-label="Right">&#9654;</button></div>
   </div>
  </div></section>
 
@@ -1074,6 +1123,140 @@ details[open]{border-color:var(--st-edge)}
     raf=requestAnimationFrame(frame);
     document.addEventListener('visibilitychange',function(){if(document.hidden)cancelAnimationFrame(raf);else{last=performance.now();raf=requestAnimationFrame(frame)}});
   }
+})();
+</script>
+<script>
+/* DNA Snake: collect amino acids and grow a protein chain */
+(function(){
+  var cv=document.getElementById('snk');if(!cv)return;
+  var g=cv.getContext('2d'),reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var SFX=window.SFX||{pop:function(){},giggle:function(){},boing:function(){},success:function(){}};
+  var ov=document.getElementById('snk-ov'),ovTitle=document.getElementById('snk-title'),ovText=document.getElementById('snk-text'),startBtn=document.getElementById('snk-start'),
+      pauseBtn=document.getElementById('snk-pause'),lenEl=document.getElementById('snk-len'),bestEl=document.getElementById('snk-best'),msg=document.getElementById('snk-msg'),seq=document.getElementById('snk-seq');
+  var COLS={np:'#ffb3c7',po:'#9fd8ff',ac:'#ffd98f',ba:'#b9f58a'};
+  var AA=[['A','Ala','Alanine','GCU','np'],['R','Arg','Arginine','CGU','ba'],['N','Asn','Asparagine','AAU','po'],['D','Asp','Aspartate','GAU','ac'],['C','Cys','Cysteine','UGU','po'],
+    ['Q','Gln','Glutamine','CAA','po'],['E','Glu','Glutamate','GAA','ac'],['G','Gly','Glycine','GGU','np'],['H','His','Histidine','CAU','ba'],['I','Ile','Isoleucine','AUU','np'],
+    ['L','Leu','Leucine','CUU','np'],['K','Lys','Lysine','AAA','ba'],['M','Met','Methionine','AUG','np'],['F','Phe','Phenylalanine','UUU','np'],['P','Pro','Proline','CCU','np'],
+    ['S','Ser','Serine','UCU','po'],['T','Thr','Threonine','ACU','po'],['W','Trp','Tryptophan','UGG','np'],['Y','Tyr','Tyrosine','UAU','po'],['V','Val','Valine','GUU','np']];
+  var FACTS=['Amino acids join together with peptide bonds!','A chain of amino acids folds into a protein.','DNA is copied into RNA. It is read three letters at a time. Each triplet is a codon.','Your body uses 20 different amino acids.','Proteins do many jobs. Some are enzymes and some build muscles!','The start codon AUG makes methionine. Every protein starts here!'];
+  var W=300,H=240,dpr=1,cell=32,C=10,R=7,ox=0,oy=0;
+  var state='idle',snake=[],prev=[],dir={x:1,y:0},queue=[],foods=[],acc=0,stepMs=170,time=0,eaten=0,best=1,run=false,last=0,raf=0,vis=false,wig=0,flash=0;
+  try{best=+localStorage.getItem('drnam-main:snake-best')||1}catch(e){}bestEl.textContent=best;
+  function say(t){msg.textContent=t}
+  function resize(){var r=cv.getBoundingClientRect();if(!r.width)return;dpr=Math.min(2,window.devicePixelRatio||1);W=r.width;H=r.height;cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);
+    if(state==='idle'||state==='over'){var cs=W<560?32:36;C=Math.max(8,Math.floor(W/cs));R=Math.max(6,Math.floor(H/cs))}
+    cell=Math.min(W/C,H/R);ox=(W-cell*C)/2;oy=(H-cell*R)/2;draw()}
+  function rnd(n){return Math.floor(Math.random()*n)}
+  function free(x,y){for(var i=0;i<snake.length;i++)if(snake[i].x===x&&snake[i].y===y)return false;for(var j=0;j<foods.length;j++)if(foods[j].x===x&&foods[j].y===y)return false;return true}
+  function spawn(){var guard=0;while(foods.length<3&&guard++<200){var x=rnd(C),y=rnd(R);if(!free(x,y))continue;
+      var a;do{a=AA[rnd(AA.length)]}while(foods.some(function(f){return f.aa===a}));foods.push({x:x,y:y,aa:a,ph:Math.random()*6})}}
+  function chip(a){var s=document.createElement('span');s.className='snk__chip';s.style.background=COLS[a[4]];s.textContent=a[1];s.title=a[2];seq.appendChild(s)}
+  function start(){
+    state='play';ov.hidden=true;eaten=1;stepMs=170;acc=0;queue=[];dir={x:1,y:0};
+    var cx=Math.floor(C/2),cy=Math.floor(R/2);
+    snake=[{x:cx,y:cy,aa:null},{x:cx-1,y:cy,aa:AA[12]}];prev=snake.map(function(s){return{x:s.x,y:s.y}});
+    foods=[];spawn();seq.innerHTML='';chip(AA[12]);lenEl.textContent=1;pauseBtn.textContent='Pause';
+    say('Start codon AUG makes methionine (M). Every protein begins with it!');SFX.pop();
+    cv.focus({preventScroll:true});go()}
+  function over(){
+    state='over';var n=snake.length-1;SFX.boing();
+    if(n>best){best=n;bestEl.textContent=best;try{localStorage.setItem('drnam-main:snake-best',best)}catch(e){}}
+    ovTitle.innerHTML='Oops! <span>Tangled!</span>';
+    ovText.textContent='Your protein has '+n+' amino acid'+(n>1?'s':'')+'. '+(n>=best&&n>1?'That is your best!':'Try again, you can do it!');
+    startBtn.textContent='Play again';ov.hidden=false;say('Oops! Tangled up. Your protein has '+n+' amino acids.');draw()}
+  function dirKey(d){var m={u:{x:0,y:-1},d:{x:0,y:1},l:{x:-1,y:0},r:{x:1,y:0}}[d];if(!m)return;
+    var ref=queue.length?queue[queue.length-1]:dir;if(m.x===-ref.x&&m.y===-ref.y)return;if(m.x===ref.x&&m.y===ref.y)return;if(queue.length<2)queue.push(m)}
+  function step(){
+    if(queue.length)dir=queue.shift();
+    var h=snake[0],nx=(h.x+dir.x+C)%C,ny=(h.y+dir.y+R)%R;
+    var fi=-1;for(var i=0;i<foods.length;i++)if(foods[i].x===nx&&foods[i].y===ny)fi=i;
+    var body=snake.length-(fi<0?1:0);for(var k=0;k<body;k++)if(snake[k].x===nx&&snake[k].y===ny){prev=snake.map(function(s){return{x:s.x,y:s.y}});over();return}
+    prev=snake.map(function(s){return{x:s.x,y:s.y}});
+    var tail=snake[snake.length-1],tp={x:tail.x,y:tail.y};
+    for(var j=snake.length-1;j>0;j--){snake[j].x=snake[j-1].x;snake[j].y=snake[j-1].y}
+    h.x=nx;h.y=ny;
+    if(fi>=0){var f=foods.splice(fi,1)[0];snake.push({x:tp.x,y:tp.y,aa:f.aa});prev.push({x:tp.x,y:tp.y});eaten++;flash=.35;
+      chip(f.aa);lenEl.textContent=snake.length-1;spawn();SFX.pop();
+      var n=snake.length-1;stepMs=Math.max(90,170-7*Math.floor(n/3));if(n>best){best=n;bestEl.textContent=best;try{localStorage.setItem('drnam-main:snake-best',best)}catch(e){}}
+      if(n%5===0){say(FACTS[(n/5-1)%FACTS.length]);SFX.giggle()}
+      else say('Yum! '+f.aa[3]+' codes for '+f.aa[2]+' ('+f.aa[0]+').')}
+  }
+  function go(){if(run||!vis)return;run=true;last=performance.now();raf=requestAnimationFrame(frame)}
+  function frame(t){
+    if(!run)return;var dt=Math.min(.05,(t-last)/1000||.016);last=t;time+=dt;wig+=dt;if(flash>0)flash-=dt;
+    if(state==='play'){acc+=dt*1000;while(acc>=stepMs&&state==='play'){acc-=stepMs;step()}}
+    draw();
+    if(state==='play'||(state!=='paused'&&!reduce))raf=requestAnimationFrame(frame);else run=false}
+  /* drawing */
+  function px(x,y){return[ox+(x+.5)*cell,oy+(y+.5)*cell]}
+  function lerpPos(i,tt){var c=snake[i],p=prev[i]||c;var dx=c.x-p.x,dy=c.y-p.y;if(Math.abs(dx)>1||Math.abs(dy)>1)return px(c.x,c.y);return px(p.x+dx*tt,p.y+dy*tt)}
+  function bead(x,y,r,col,letter,sq){
+    g.save();g.translate(x,y);g.scale(1+(sq||0)*-.1,1+(sq||0)*.1);
+    g.shadowColor='rgba(0,0,0,.35)';g.shadowBlur=r*.4;g.shadowOffsetY=r*.2;
+    g.fillStyle=col;g.beginPath();g.arc(0,0,r,0,7);g.fill();g.shadowColor='transparent';
+    var gr=g.createRadialGradient(-r*.35,-r*.4,r*.05,0,0,r);gr.addColorStop(0,'rgba(255,255,255,.65)');gr.addColorStop(.55,'rgba(255,255,255,0)');gr.addColorStop(1,'rgba(0,0,0,.1)');g.fillStyle=gr;g.beginPath();g.arc(0,0,r,0,7);g.fill();
+    g.strokeStyle='rgba(255,255,255,.85)';g.lineWidth=Math.max(1.5,r*.1);g.beginPath();g.arc(0,0,r,0,7);g.stroke();
+    if(letter){g.fillStyle='#14202b';g.font='800 '+Math.round(r*1.05)+'px League Spartan, system-ui, sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillText(letter,0,r*.06)}
+    g.restore()}
+  function head(x,y,r){
+    var lx=dir.x,ly=dir.y;g.save();g.translate(x,y);
+    g.shadowColor='rgba(0,0,0,.35)';g.shadowBlur=r*.4;g.shadowOffsetY=r*.2;
+    var gr0=g.createRadialGradient(-r*.3,-r*.35,r*.05,0,0,r*1.05);gr0.addColorStop(0,'#ffc2cf');gr0.addColorStop(.6,'#ff8fa3');gr0.addColorStop(1,'#f2708a');
+    g.fillStyle=gr0;g.beginPath();g.arc(0,0,r*1.05,0,7);g.fill();g.shadowColor='transparent';
+    g.strokeStyle='rgba(255,255,255,.85)';g.lineWidth=Math.max(1.5,r*.1);g.stroke();
+    var er=r*.2,ex=r*.36;g.fillStyle='#14202b';
+    [-1,1].forEach(function(sd){var cx=sd*ex+lx*er*.5,cy=-r*.08+ly*er*.5;g.beginPath();g.ellipse(cx,cy,er*.85,er*1.1,0,0,7);g.fill();g.fillStyle='#fff';g.beginPath();g.arc(cx+er*.3,cy-er*.4,er*.34,0,7);g.fill();g.fillStyle='#14202b'});
+    g.fillStyle='rgba(255,92,140,.5)';[-1,1].forEach(function(sd){g.beginPath();g.ellipse(sd*r*.66,r*.2,r*.17,r*.1,0,0,7);g.fill()});
+    g.strokeStyle='#14202b';g.lineWidth=Math.max(1.2,r*.07);g.lineCap='round';g.beginPath();g.moveTo(-r*.2,r*.32);g.quadraticCurveTo(0,r*.5,r*.2,r*.32);g.stroke();
+    /* flicking tongue */
+    var fl=reduce?0:Math.max(0,Math.sin(wig*7));g.fillStyle='#ff4f7a';if(fl>.3){g.beginPath();g.moveTo(-r*.05,r*.44);g.lineTo(0,r*.44+r*.5*fl);g.lineTo(r*.05,r*.44);g.closePath();g.fill()}
+    /* tiny DNA bow on top */
+    g.fillStyle='#b8a6ff';g.beginPath();g.ellipse(-r*.3,-r*1.0,r*.28,r*.16,-.4,0,7);g.ellipse(r*.3,-r*1.0,r*.28,r*.16,.4,0,7);g.fill();g.fillStyle='#D4FF3A';g.beginPath();g.arc(0,-r*.98,r*.13,0,7);g.fill();
+    g.restore()}
+  function draw(){
+    g.setTransform(dpr,0,0,dpr,0,0);g.clearRect(0,0,W,H);
+    /* soft dot grid */
+    g.fillStyle='rgba(238,246,244,.10)';for(var x=0;x<C;x++)for(var y=0;y<R;y++){var p=px(x,y);g.beginPath();g.arc(p[0],p[1],1.4,0,7);g.fill()}
+    if(!snake.length){drawIdle();return}
+    var tt=state==='play'?Math.min(1,acc/stepMs):1;
+    /* food */
+    foods.forEach(function(f){var p=px(f.x,f.y),b=reduce?0:Math.sin(time*3+f.ph)*cell*.05,pulse=1+(reduce?0:Math.sin(time*4+f.ph)*.06);
+      g.save();g.translate(p[0],p[1]+b);g.scale(pulse,pulse);bead(0,0,cell*.4,COLS[f.aa[4]],f.aa[0],0);
+      g.fillStyle='rgba(255,92,140,.45)';g.beginPath();g.ellipse(-cell*.2,cell*.14,cell*.07,cell*.04,0,0,7);g.ellipse(cell*.2,cell*.14,cell*.07,cell*.04,0,0,7);g.fill();g.restore()});
+    /* bonds */
+    var pts=[];for(var i=0;i<snake.length;i++)pts.push(lerpPos(i,tt));
+    g.lineCap='round';g.strokeStyle='rgba(238,246,244,.9)';g.lineWidth=cell*.16;
+    for(var k=0;k<pts.length-1;k++){if(Math.hypot(pts[k][0]-pts[k+1][0],pts[k][1]-pts[k+1][1])>cell*1.6)continue;g.beginPath();g.moveTo(pts[k][0],pts[k][1]);g.lineTo(pts[k+1][0],pts[k+1][1]);g.stroke()}
+    for(var j=snake.length-1;j>=1;j--){var s=snake[j];bead(pts[j][0],pts[j][1],cell*.4,COLS[s.aa[4]],s.aa[0],j===snake.length-1?flash*2:0)}
+    head(pts[0][0],pts[0][1],cell*.46);
+  }
+  function drawIdle(){
+    var p=px(Math.floor(C/2),Math.floor(R/2));head(p[0],p[1],cell*.7)}
+  /* controls */
+  function keyDir(k){return({ArrowUp:'u',ArrowDown:'d',ArrowLeft:'l',ArrowRight:'r',w:'u',W:'u',s:'d',S:'d',a:'l',A:'l',d:'r',D:'r'})[k]}
+  addEventListener('keydown',function(e){
+    if(!vis)return;
+    if(state==='play'||state==='paused'){var d=keyDir(e.key);
+      if(d){e.preventDefault();e.stopImmediatePropagation();if(state==='play')dirKey(d);return}
+      if(e.key===' '||e.key==='p'||e.key==='P'){if(document.activeElement===cv||document.activeElement===document.body){e.preventDefault();e.stopImmediatePropagation();toggle()}}}
+  },true);
+  function toggle(){if(state==='play'){state='paused';pauseBtn.textContent='Resume';say('Paused. Take a little break!')}else if(state==='paused'){state='play';pauseBtn.textContent='Pause';acc=0;go()}}
+  startBtn.addEventListener('click',function(){if(state==='idle'||state==='over')start()});
+  pauseBtn.addEventListener('click',function(){toggle()});
+  [].forEach.call(document.querySelectorAll('.snk__pad button'),function(b){b.addEventListener('pointerdown',function(e){e.preventDefault();dirKey(b.dataset.d);if(state==='paused')toggle()})});
+  cv.addEventListener('pointerdown',function(){cv.focus({preventScroll:true})});
+  /* tabs */
+  var pm=document.getElementById('panel-mol'),ps=document.getElementById('panel-snk'),tabs=[].slice.call(document.querySelectorAll('[data-ptab]'));
+  tabs.forEach(function(t){t.addEventListener('click',function(){
+    var snk=t.dataset.ptab==='snk';pm.hidden=snk;ps.hidden=!snk;
+    tabs.forEach(function(x){x.setAttribute('aria-pressed',x===t)});
+    if(snk){setTimeout(function(){resize();go()},30)}else if(state==='play')toggle();
+  })});
+  if('ResizeObserver' in window)new ResizeObserver(resize).observe(cv);else addEventListener('resize',resize);
+  if('IntersectionObserver' in window)new IntersectionObserver(function(es){vis=es[0].isIntersecting;if(vis){go()}else{if(state==='play')toggle();run=false;cancelAnimationFrame(raf)}}).observe(cv);else vis=true;
+  document.addEventListener('visibilitychange',function(){if(document.hidden&&state==='play')toggle()});
+  cv.__snk=function(){return{vis:vis,run:run,state:state,snake:snake.map(function(s){return{x:s.x,y:s.y}}),foods:foods.map(function(f){return{x:f.x,y:f.y}}),dir:dir,C:C,R:R}};
+  resize();
 })();
 </script>
 </body>
