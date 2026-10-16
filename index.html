@@ -1156,14 +1156,14 @@ details[open]{border-color:var(--st-edge)}
       var a;do{a=AA[rnd(AA.length)]}while(foods.some(function(f){return f.aa===a}));foods.push({x:x,y:y,aa:a,ph:Math.random()*6})}}
   function chip(a){var s=document.createElement('span');s.className='snk__chip';s.style.background=COLS[a[4]];s.textContent=a[1];s.title=a[2];seq.appendChild(s)}
   function start(){
-    state='play';ov.hidden=true;eaten=1;stepMs=baseMs;acc=0;queue=[];dir={x:1,y:0};
+    state='play';cv.style.touchAction='none';ov.hidden=true;eaten=1;stepMs=baseMs;acc=0;queue=[];dir={x:1,y:0};
     var cx=Math.floor(C/2),cy=Math.floor(R/2);
     snake=[{x:cx,y:cy,aa:null},{x:cx-1,y:cy,aa:AA[12]}];prev=snake.map(function(s){return{x:s.x,y:s.y}});
     foods=[];spawn();seq.innerHTML='';chip(AA[12]);lenEl.textContent=1;pauseBtn.textContent='Pause';
     say('Start codon AUG makes methionine (M). Every protein begins with it!');SFX.pop();
     cv.focus({preventScroll:true});go()}
   function over(){
-    state='over';var n=snake.length-1;SFX.boing();
+    state='over';cv.style.touchAction='pan-y';var n=snake.length-1;SFX.boing();
     if(n>best){best=n;bestEl.textContent=best;try{localStorage.setItem('drnam-main:snake-best',best)}catch(e){}}
     ovTitle.innerHTML='Oops! <span>Tangled!</span>';
     ovText.textContent='Your protein has '+n+' amino acid'+(n>1?'s':'')+'. '+(n>=best&&n>1?'That is your best!':'Try again, you can do it!');
@@ -1244,11 +1244,23 @@ details[open]{border-color:var(--st-edge)}
       if(d){e.preventDefault();e.stopImmediatePropagation();if(state==='play')dirKey(d);return}
       if(e.key===' '||e.key==='p'||e.key==='P'){if(document.activeElement===cv||document.activeElement===document.body){e.preventDefault();e.stopImmediatePropagation();toggle()}}}
   },true);
-  function toggle(){if(state==='play'){state='paused';pauseBtn.textContent='Resume';say('Paused. Take a little break!')}else if(state==='paused'){state='play';pauseBtn.textContent='Pause';acc=0;go()}}
+  function toggle(){if(state==='play'){state='paused';cv.style.touchAction='pan-y';pauseBtn.textContent='Resume';say('Paused. Take a little break!')}else if(state==='paused'){state='play';cv.style.touchAction='none';pauseBtn.textContent='Pause';acc=0;go()}}
   startBtn.addEventListener('click',function(){if(state==='idle'||state==='over')start()});
   pauseBtn.addEventListener('click',function(){toggle()});
   [].forEach.call(document.querySelectorAll('.snk__pad button'),function(b){b.addEventListener('pointerdown',function(e){e.preventDefault();dirKey(b.dataset.d);if(state==='paused')toggle()})});
   cv.addEventListener('pointerdown',function(){cv.focus({preventScroll:true})});
+  /* swipe on the board to steer (only while playing; otherwise the page scrolls normally) */
+  var sw=null;
+  cv.addEventListener('pointerdown',function(e){if(state!=='play'||e.pointerType==='mouse')return;sw={id:e.pointerId,x:e.clientX,y:e.clientY};try{cv.setPointerCapture(e.pointerId)}catch(x){}});
+  cv.addEventListener('pointermove',function(e){
+    if(!sw||e.pointerId!==sw.id||state!=='play')return;
+    var dx=e.clientX-sw.x,dy=e.clientY-sw.y,th=Math.max(18,cell*.55);
+    if(Math.abs(dx)<th&&Math.abs(dy)<th)return;
+    dirKey(Math.abs(dx)>Math.abs(dy)?(dx>0?'r':'l'):(dy>0?'d':'u'));
+    sw.x=e.clientX;sw.y=e.clientY});
+  function swEnd(e){if(sw&&e.pointerId===sw.id)sw=null}
+  cv.addEventListener('pointerup',swEnd);cv.addEventListener('pointercancel',swEnd);
+  if(matchMedia('(pointer:coarse)').matches)ovText.textContent='Swipe on the board to steer the cute snake, or use the buttons. Eat amino acids to grow your protein chain. Do not bump into yourself!';
   /* speed choice (Slow is the default) */
   var spd=[].slice.call(document.querySelectorAll('[data-spd]'));
   function setSpd(v){baseMs=v;if(state!=='play')stepMs=v;spd.forEach(function(b){b.setAttribute('aria-pressed',+b.dataset.spd===v)});try{localStorage.setItem('drnam-main:snake-speed',v)}catch(e){}}
