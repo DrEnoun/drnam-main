@@ -170,6 +170,16 @@ button.btn{cursor:pointer;font-size:1rem}
 .tab--change{border-style:dashed;color:var(--teal)}
 .tab--picks{background:var(--spark);border-color:var(--spark);color:var(--on-spark)}
 .tab--picks[aria-selected="true"]{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+/* Phones, touch screens and short windows: normal scrolling. Snapping only suits big screens where each slide fits. */
+@media (max-width:900px),(max-height:760px),(pointer:coarse){
+  html{scroll-snap-type:none;scroll-behavior:auto}
+  .slide{min-height:0;scroll-snap-align:none;scroll-snap-stop:normal;justify-content:flex-start}
+  .slide>.wrap{padding-block:44px}
+  .hero.slide{min-height:calc(100svh - 60px);justify-content:center}
+  footer{scroll-snap-align:none}
+  .dots,.count,.hint{display:none!important}
+  .slide__n{display:none!important}
+}
 /* slide dots + hint */
 .dots{position:fixed;right:max(10px,env(safe-area-inset-right,0px));top:50%;transform:translateY(-50%);z-index:15;display:flex;flex-direction:column;gap:10px}
 .dots a{position:relative;display:block;width:12px;height:12px;border-radius:50%;background:transparent;border:2px solid var(--teal);transition:transform .3s var(--pop),background .2s}
@@ -406,8 +416,8 @@ details[open] p{animation:rise .4s var(--pop)}
   var grid=document.getElementById('grid');
   cards.forEach(function(c,i){c.classList.add('rv');c.style.setProperty('--i',i%3)});
   var els=document.querySelectorAll('.rv,.s h2');
-  function show(e){e.classList.add(e.matches('h2')?'in-view':'in')}
-  function hide(e){e.classList.remove(e.matches('h2')?'in-view':'in')}
+  function show(e){e.classList.add('in');if(e.matches('h2'))e.classList.add('in-view')}
+  function hide(e){e.classList.remove('in');if(e.matches('h2'))e.classList.remove('in-view')}
   if(reduce||!('IntersectionObserver' in window)){els.forEach(show)}
   else{
     var io=new IntersectionObserver(function(es){es.forEach(function(e){var t=e.target,isCard=t.classList.contains('card');
