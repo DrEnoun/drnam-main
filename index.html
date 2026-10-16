@@ -388,6 +388,9 @@ details[open] p{animation:rise .4s var(--pop)}
     <label for="fb-better">What can be better? <span class="opt-hint">(optional)</span></label>
     <select id="fb-better" data-other="fb-better-o"><option value="">Choose one...</option><option>Make it faster</option><option>Use simpler words</option><option>Add more games or topics</option><option>Make the text easier to read</option><option>Something is not working</option><option value="__other">Other (type your own)</option></select>
     <input type="text" id="fb-better-o" class="fb__other" maxlength="300" placeholder="Type what can be better (what is not working?)" hidden>
+    <label for="fb-learn">What do you want to learn more about? <span class="opt-hint">(optional)</span></label>
+    <select id="fb-learn" data-other="fb-learn-o"><option value="">Choose one...</option><option>Fundamentals of chemistry</option><option>Organic chemistry</option><option>Drug design and docking</option><option>Medication safety</option><option>Chemistry in daily life</option><option>Fun chemistry games</option><option>Research and AI tools</option><option>Careers in pharmacy</option><option value="__other">Other (type your own)</option></select>
+    <input type="text" id="fb-learn-o" class="fb__other" maxlength="300" placeholder="Type what you want to learn" hidden>
     <label for="fb-contact">Your email or name <span class="opt-hint">(optional, only if you want a reply)</span></label>
     <input type="text" id="fb-contact" maxlength="150" autocomplete="off">
     <div class="fb__trap" aria-hidden="true"><label>Leave this empty<input type="text" id="fb-website" tabindex="-1" autocomplete="off"></label></div>
@@ -932,12 +935,12 @@ details[open] p{animation:rise .4s var(--pop)}
   function role(){try{var s=JSON.parse(localStorage.getItem('drnam-main:path:v1')||'null');return s&&s.role||''}catch(e){return ''}}
   form.addEventListener('submit',function(e){
     e.preventDefault();if(sending)return;
-    var liked=val('fb-liked'),better=val('fb-better'),miss=otherMissing();
+    var liked=val('fb-liked'),better=val('fb-better'),learn=val('fb-learn'),miss=otherMissing();
     if(miss){msg.className='fb__msg err';msg.textContent='Please type your own answer, or pick one from the list.';document.getElementById(miss.dataset.other).focus();return}
-    if(!rating&&!liked&&!better){msg.className='fb__msg err';msg.textContent='Please tap a heart or write a short message.';return}
+    if(!rating&&!liked&&!better&&!learn){msg.className='fb__msg err';msg.textContent='Please tap a heart or write a short message.';return}
     if(!FEEDBACK_URL){msg.className='fb__msg err';msg.textContent='Feedback is not connected yet. Please try again later.';return}
     sending=true;var btn=document.getElementById('fb-send');btn.disabled=true;btn.textContent='Sending love...';msg.className='fb__msg';msg.textContent='';
-    var body=JSON.stringify({rating:rating||'',role:val('fb-role'),liked:liked,better:better,contact:val('fb-contact'),website:val('fb-website'),page:'hub '+(role()?'('+role()+') ':'')+innerWidth+'px'});
+    var body=JSON.stringify({rating:rating||'',role:val('fb-role'),liked:liked,better:better,learn:learn,contact:val('fb-contact'),website:val('fb-website'),page:'hub '+(role()?'('+role()+') ':'')+innerWidth+'px'});
     /* text/plain keeps this a "simple" request, so the browser sends it without a permission check */
     fetch(FEEDBACK_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:body}).then(function(){
       document.getElementById('fb-main').hidden=true;document.getElementById('fb-done').hidden=false;SFX.success();form.reset();[].forEach.call(fb.querySelectorAll('.fb__other'),function(o){o.hidden=true});rating=0;paint();document.getElementById('fb-ok').focus();
