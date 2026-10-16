@@ -21,8 +21,15 @@
   --bg:#09141D; --surface:#102230; --ink:#E6F0EE; --muted:#9BB0B4; --line:#21384A;
   --teal:#4CC9BD; --teal-soft:#123A3C; color-scheme:dark}}
 *{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;scroll-padding-top:70px}
-body{margin:0;background:var(--bg);color:var(--ink);font:1rem/1.6 var(--font-body)}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;scroll-padding-top:60px;scroll-snap-type:y mandatory}
+.slide{min-height:calc(100svh - 60px);scroll-snap-align:start;scroll-snap-stop:always;display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden}
+.slide>.wrap{width:100%;padding-block:36px}
+.slide--dark{background:radial-gradient(120% 140% at 85% 0%,var(--night-2) 0%,var(--night) 60%);color:var(--hero-ink)}
+.slide--dark .eyebrow{color:var(--spark)}
+.slide--dark .sub{color:var(--hero-muted)}
+.slide--alt{background:var(--surface)}
+.slide__n{position:absolute;right:max(16px,4vw);bottom:10px;font:800 clamp(5rem,16vw,11rem)/1 var(--font-display);color:currentColor;opacity:.06;pointer-events:none;user-select:none}
+body{overflow-x:clip;margin:0;background:var(--bg);color:var(--ink);font:1rem/1.6 var(--font-body)}
 img{max-width:100%}
 a{color:inherit}
 .wrap{max-width:1080px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
@@ -48,7 +55,8 @@ h1,h2,h3{font-family:var(--font-display);margin:0}
 /* hero */
 .hero{background:radial-gradient(120% 140% at 85% 0%,var(--night-2) 0%,var(--night) 60%);color:var(--hero-ink);position:relative;overflow:hidden}
 .hero::after{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(212,255,58,.10) 1px,transparent 1.4px);background-size:22px 22px;pointer-events:none;-webkit-mask-image:linear-gradient(90deg,transparent 30%,#000);mask-image:linear-gradient(90deg,transparent 30%,#000)}
-.hero .wrap{position:relative;z-index:1;padding-block:64px 56px;display:grid;grid-template-columns:1.4fr 1fr;gap:32px;align-items:center}
+.hero{min-height:calc(100svh - 60px)}
+.hero .wrap{position:relative;z-index:1;padding-block:48px;display:grid;grid-template-columns:1.4fr 1fr;gap:32px;align-items:center}
 .hero .wrap>*{min-width:0}
 .kick{margin:0 0 10px;font:700 .78rem var(--font-display);letter-spacing:.18em;text-transform:uppercase;color:var(--spark)}
 .hero h1{font-weight:800;font-size:clamp(2.6rem,7vw,4.8rem);line-height:.95;letter-spacing:-.02em;text-wrap:balance}
@@ -63,15 +71,16 @@ h1,h2,h3{font-family:var(--font-display);margin:0}
 
 /* stats strip */
 .stats{background:var(--surface);border-bottom:1px solid var(--line)}
-.stats .wrap{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding-block:22px}
+.stats .wrap{display:grid;grid-template-columns:repeat(4,1fr);gap:8px 12px;padding-block:36px}
 .stat{text-align:center}
-.stat b{display:block;font:800 2.2rem/1 var(--font-display);color:var(--teal)}
-.stat span{font-size:.85rem;color:var(--muted)}
+.stat b{display:block;font:800 clamp(2.6rem,7vw,5rem)/1 var(--font-display);color:var(--teal)}
+.stat span{font-size:1rem;color:var(--muted)}
+.stats-title{margin:0 0 28px;text-align:center}
 @media(max-width:560px){.stats .wrap{grid-template-columns:repeat(2,1fr);row-gap:18px}}
 
 /* sections */
-section.s{padding-block:64px 8px}
-.s h2{font-weight:800;font-size:clamp(1.9rem,4.5vw,2.8rem);line-height:1;letter-spacing:-.01em}
+section.s{padding:0}
+.s h2{font-weight:800;font-size:clamp(2rem,5vw,3.4rem);line-height:1;letter-spacing:-.01em}
 .s .sub{margin:10px 0 0;color:var(--muted);max-width:60ch}
 .eyebrow{margin:0 0 8px;font:700 .78rem var(--font-display);letter-spacing:.16em;text-transform:uppercase;color:var(--teal)}
 
@@ -104,10 +113,10 @@ section.s{padding-block:64px 8px}
 .card span.tag::after{content:" \2197"}
 
 /* about */
-.about{display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:center;background:var(--night);color:var(--hero-ink);border-radius:24px;padding:32px;margin-top:64px}
-.about img.p{width:130px;height:130px;border-radius:50%;background:#fff}
-.about h2{font-size:1.9rem}
-.about p{margin:10px 0 0;color:var(--hero-muted)}
+.about{display:grid;grid-template-columns:auto 1fr;gap:36px;align-items:center}
+.about img.p{width:min(260px,60vw);aspect-ratio:1;border-radius:50%;background:#fff;box-shadow:0 0 0 8px rgba(212,255,58,.18)}
+.about h2{font-size:clamp(2rem,5vw,3.2rem)}
+.about p{margin:12px 0 0;color:var(--hero-muted);font-size:1.1rem;max-width:52ch}
 .about .eyebrow{color:var(--spark)}
 @media(max-width:620px){.about{grid-template-columns:1fr;padding:24px}}
 
@@ -122,18 +131,30 @@ summary:focus-visible{outline:3px solid var(--teal);outline-offset:2px;border-ra
 details p{margin:0 0 16px;color:var(--muted)}
 
 /* final cta */
-.final{margin-top:64px;text-align:center;background:radial-gradient(120% 140% at 50% 0%,var(--night-2),var(--night));color:var(--hero-ink);border-radius:24px;padding:48px 20px}
-.final h2{font-size:clamp(1.8rem,4.5vw,2.6rem)}
+.final{text-align:center}
+.final h2{font-size:clamp(2.4rem,7vw,4.5rem)}
 .final p{margin:10px auto 22px;color:var(--hero-muted);max-width:46ch}
 
-footer{margin-top:64px;border-top:1px solid var(--line)}
+footer{scroll-snap-align:end;border-top:1px solid var(--line)}
 footer .wrap{padding-block:20px 28px;color:var(--muted);font-size:.86rem;display:flex;flex-wrap:wrap;gap:6px 18px;justify-content:space-between}
 footer b{color:var(--ink)}
 
+/* slide dots + hint */
+.dots{position:fixed;right:max(10px,env(safe-area-inset-right,0px));top:50%;transform:translateY(-50%);z-index:15;display:flex;flex-direction:column;gap:10px}
+.dots a{position:relative;display:block;width:12px;height:12px;border-radius:50%;background:transparent;border:2px solid var(--teal);transition:transform .3s var(--pop),background .2s}
+.dots a.on{background:var(--spark);border-color:var(--spark);transform:scale(1.5);box-shadow:0 0 0 2px var(--night)}
+.dots a:focus-visible{outline:3px solid var(--spark);outline-offset:3px}
+.dots a::after{content:attr(data-t);position:absolute;right:22px;top:50%;transform:translateY(-50%) scale(.9);opacity:0;pointer-events:none;white-space:nowrap;background:var(--night);color:var(--hero-ink);font:700 .78rem var(--font-body);padding:3px 10px;border-radius:999px;transition:opacity .2s,transform .2s var(--pop)}
+.dots a:hover::after,.dots a:focus-visible::after{opacity:1;transform:translateY(-50%)}
+.count{position:fixed;left:max(16px,env(safe-area-inset-left,0px));bottom:14px;z-index:15;font:800 .85rem var(--font-display);letter-spacing:.1em;color:var(--on-spark);background:var(--spark);border-radius:999px;padding:3px 12px}
+.hint{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);font:700 .75rem var(--font-display);letter-spacing:.16em;text-transform:uppercase;color:var(--hero-muted);animation:nudge 1.6s ease-in-out infinite;z-index:1;text-align:center}
+.hint::after{content:"";display:block;width:10px;height:10px;margin:6px auto 0;border-right:2px solid var(--spark);border-bottom:2px solid var(--spark);transform:rotate(45deg)}
+@keyframes nudge{50%{transform:translate(-50%,8px)}}
+@media(max-width:560px){.dots{gap:8px}.dots a{width:9px;height:9px}.dots a::after{display:none}}
 /* ===== motion: pop + flow ===== */
 :root{--pop:cubic-bezier(.34,1.56,.64,1)}
 .progress{position:fixed;top:0;left:0;height:4px;width:100%;background:var(--spark);transform-origin:0 50%;transform:scaleX(0);z-index:20}
-.rv{opacity:0;transform:translateY(40px) scale(.92);transition:opacity .5s ease,transform .7s var(--pop);transition-delay:calc(var(--i,0)*70ms)}
+.rv{opacity:0;transform:translateY(60px) scale(.9);transition:opacity .5s ease,transform .7s var(--pop);transition-delay:calc(var(--i,0)*70ms)}
 .rv.in{opacity:1;transform:none}
 .hero .wrap>div:first-child>*{animation:rise .8s var(--pop) both}
 .hero .wrap>div:first-child>*:nth-child(2){animation-delay:.1s}
@@ -156,7 +177,7 @@ footer b{color:var(--ink)}
 .btn--spark{animation:pulse 2.4s ease-in-out 2s infinite}
 @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(212,255,58,.5)}50%{box-shadow:0 0 0 14px rgba(212,255,58,0)}}
 .btn:active{transform:scale(.94)}
-.marquee{background:var(--spark);color:var(--on-spark);overflow:hidden;white-space:nowrap;transform:rotate(-1.2deg);margin:-8px -10px 0;position:relative;z-index:2}
+.marquee{background:var(--spark);color:var(--on-spark);overflow:hidden;white-space:nowrap;transform:rotate(-1.2deg);margin:0 -10px;position:relative;z-index:2}
 .marquee div{display:inline-block;padding:10px 0;font:800 1.05rem var(--font-display);letter-spacing:.06em;text-transform:uppercase;animation:slide 28s linear infinite}
 .marquee span{margin:0 18px}
 @keyframes slide{to{transform:translateX(-50%)}}
@@ -180,6 +201,7 @@ details{transition:border-color .2s,transform .3s var(--pop)}
 details[open]{border-color:var(--teal);transform:scale(1.01)}
 details[open] p{animation:rise .4s var(--pop)}
 @media (prefers-reduced-motion:reduce){
+  html{scroll-snap-type:none}.hint{animation:none}
   *,*::before,*::after{animation:none!important;transition:none!important}
   .rv{opacity:1;transform:none}html{scroll-behavior:auto}.marquee div{animation:none}.progress{display:none}
 }
@@ -188,6 +210,8 @@ details[open] p{animation:rise .4s var(--pop)}
 <body>
 
 <div class="progress" id="progress" aria-hidden="true"></div>
+<nav class="dots" id="dots" aria-label="Slides"></nav>
+<div class="count" id="count" aria-hidden="true">01 / 01</div>
 <header class="nav">
  <div class="wrap">
   <a class="brand" href="#top"><img src="img/drnam-180.png" alt="">Chemistry with Dr. NAM</a>
@@ -195,7 +219,7 @@ details[open] p{animation:rise .4s var(--pop)}
  </div>
 </header>
 
-<section class="hero" id="top">
+<section class="hero slide" id="top" data-t="Welcome">
  <div class="atoms" id="atoms" aria-hidden="true"><i class="glow"></i>
   <i class="atom" style="--x:6%;--y:18%;--s:38px;--c:#D4FF3A;--d:6s;--k:.04"></i><i class="atom" style="--x:42%;--y:72%;--s:22px;--c:#4CC9BD;--d:5s;--dl:-1s;--k:-.06"></i><i class="atom" style="--x:58%;--y:12%;--s:16px;--c:#D4FF3A;--d:7s;--dl:-2s;--k:.08"></i><i class="atom" style="--x:90%;--y:64%;--s:44px;--c:#4CC9BD;--d:8s;--dl:-3s;--k:-.03"></i><i class="atom" style="--x:76%;--y:8%;--s:26px;--c:#EEF6F4;--d:6.5s;--dl:-1.5s;--k:.05"></i><i class="atom" style="--x:20%;--y:84%;--s:30px;--c:#D4FF3A;--d:7.5s;--dl:-4s;--k:-.07"></i>
  </div>
@@ -209,22 +233,25 @@ details[open] p{animation:rise .4s var(--pop)}
   </div>
   <div class="hero__art"><div class="badge"><img src="img/drnam-180.png" alt="Chemistry with Dr. NAM logo"></div></div>
  </div>
+ <div class="hint" aria-hidden="true">Scroll</div>
 </section>
 
-<div class="marquee" aria-hidden="true"><div><span>Study hubs</span><span>&#9733;</span><span>Games</span><span>&#9733;</span><span>Drug design tools</span><span>&#9733;</span><span>Play with your hands</span><span>&#9733;</span><span>Study hubs</span><span>&#9733;</span><span>Games</span><span>&#9733;</span><span>Drug design tools</span><span>&#9733;</span><span>Play with your hands</span><span>&#9733;</span></div></div>
+<div class="marquee" style="scroll-snap-align:none" aria-hidden="true"><div><span>Study hubs</span><span>&#9733;</span><span>Games</span><span>&#9733;</span><span>Drug design tools</span><span>&#9733;</span><span>Play with your hands</span><span>&#9733;</span><span>Study hubs</span><span>&#9733;</span><span>Games</span><span>&#9733;</span><span>Drug design tools</span><span>&#9733;</span><span>Play with your hands</span><span>&#9733;</span></div></div>
 
-<div class="stats">
+
+<section class="stats slide slide--alt" id="numbers" data-t="Numbers">
  <div class="wrap">
+  <p class="eyebrow" style="text-align:center">At a glance</p><h2 class="stats-title rv" style="font:800 clamp(2rem,5vw,3.4rem)/1 var(--font-display)">All in one link</h2>
   <div class="stat"><b data-count="15">15</b><span>hubs, games and tools</span></div>
   <div class="stat"><b data-count="3">3</b><span>paths: UiTM, Public, STEM</span></div>
   <div class="stat"><b>BM + EN</b><span>languages</span></div>
   <div class="stat"><b>Free</b><span>no login needed</span></div>
  </div>
-</div>
+</section>
 
-<main class="wrap">
+<main>
 
- <section class="s" id="how">
+ <section class="s slide" id="how" data-t="How it works"><div class="wrap"><span class="slide__n" aria-hidden="true">02</span>
   <p class="eyebrow">How it works</p>
   <h2>Three simple steps</h2>
   <p class="sub">Think of it like a gym for your brain. First you learn the moves, then you practise, then you try the real thing.</p>
@@ -233,9 +260,9 @@ details[open] p{animation:rise .4s var(--pop)}
    <div class="step rv" style="--i:1"><span class="n">2</span><h3>Play</h3><p>Try a game. Repeating ideas in a game helps them stick in your memory.</p></div>
    <div class="step rv" style="--i:2"><span class="n">3</span><h3>Explore</h3><p>Use the research tools to try real drug design, step by step.</p></div>
   </div>
- </section>
+ </div></section>
 
- <section class="s" id="explore">
+ <section class="s slide slide--alt" id="explore" data-t="Explore"><div class="wrap">
   <p class="eyebrow">What is inside</p>
   <h2>Pick your path</h2>
   <p class="sub">Choose who you are. We will show you the best place to start.</p>
@@ -263,18 +290,18 @@ details[open] p{animation:rise .4s var(--pop)}
      <a class="card" data-aud="stem" href="https://drenoun.github.io/stemdesignthinking/" target="_blank" rel="noopener"><span class="tile" aria-hidden="true"><i>MYIO</i><b>Dt</b></span><span class="t"><strong>Kaedah Inovasi: Design Thinking</strong><span class="d">Slides, four games and printable notes, made for the 14th MYIO 2026 Karnival Mini STEM.</span><span class="tag">Innovation · BM</span></span></a>
      <a class="card" data-aud="stem" href="https://drenoun.github.io/molecule-drop/" target="_blank" rel="noopener"><span class="tile" aria-hidden="true"><i>Game</i><b>Md</b></span><span class="t"><strong>Molecule Drop</strong><span class="d">Falling-block game on atoms, bonding, molecular shapes and functional groups, from beginner to professor level.</span><span class="tag">Game</span></span></a>
   </div>
- </section>
+ </div></section>
 
- <section class="about rv" id="about">
-  <img class="p" src="img/drnam-180.png" alt="Dr. NAM">
-  <div>
+ <section class="slide slide--dark" id="about" data-t="About"><div class="wrap about">
+  <img class="p rv" src="img/drnam-180.png" alt="Dr. NAM">
+  <div class="rv" style="--i:2">
    <p class="eyebrow">Your lecturer</p>
    <h2>Hi, I am Dr. NAM</h2>
    <p>I teach chemistry at the Faculty of Pharmacy, UiTM Bertam. My goal is simple: bring everyday life into simple science, explained. Everything here is made for my students first, and shared with everyone.</p>
   </div>
- </section>
+ </div></section>
 
- <section class="s" id="faq">
+ <section class="s slide" id="faq" data-t="FAQ"><div class="wrap">
   <p class="eyebrow">Questions</p>
   <h2>Quick answers</h2>
   <div class="faq">
@@ -283,13 +310,13 @@ details[open] p{animation:rise .4s var(--pop)}
    <details><summary>Can I use it on my phone?</summary><p>Yes. The pages work on phones, tablets and laptops. A few games work best on a laptop with a webcam.</p></details>
    <details><summary>Is it in Bahasa Malaysia or English?</summary><p>Most hubs use English. The Virtual Secret Lab and some STEM activities have Bahasa Malaysia too.</p></details>
   </div>
- </section>
+ </div></section>
 
- <section class="final rv">
-  <h2>Ready to start?</h2>
-  <p>Pick a hub and spend ten minutes. That is enough to begin.</p>
-  <a class="btn btn--spark" href="#explore">Choose my path</a>
- </section>
+ <section class="final slide slide--dark" id="go" data-t="Start"><div class="wrap">
+  <h2 class="rv">Ready to start?</h2>
+  <p class="rv" style="--i:1;margin:14px auto 26px;color:var(--hero-muted);max-width:46ch">Pick a hub and spend ten minutes. That is enough to begin.</p>
+  <a class="btn btn--spark rv" style="--i:2" href="#explore">Choose my path</a>
+ </div></section>
 
 </main>
 
@@ -324,9 +351,11 @@ details[open] p{animation:rise .4s var(--pop)}
   cards.forEach(function(c,i){c.classList.add('rv');c.style.setProperty('--i',i%3)});
   var els=document.querySelectorAll('.rv,.s h2');
   function show(e){e.classList.add(e.matches('h2')?'in-view':'in')}
+  function hide(e){e.classList.remove(e.matches('h2')?'in-view':'in')}
   if(reduce||!('IntersectionObserver' in window)){els.forEach(show)}
   else{
-    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){show(e.target);io.unobserve(e.target)}})},{threshold:.15});
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){var t=e.target,isCard=t.classList.contains('card');
+      if(e.isIntersecting){show(t);if(isCard)io.unobserve(t)}else if(!isCard&&e.intersectionRect.height===0){hide(t)}})},{threshold:[0,.15]});
     els.forEach(function(e){io.observe(e)});
   }
   cards.forEach(function(c){c.addEventListener('transitionend',function f(e){if(e.propertyName==='transform'&&c.classList.contains('in')){c.classList.remove('rv','in');c.removeEventListener('transitionend',f)}})});
@@ -337,6 +366,23 @@ details[open] p{animation:rise .4s var(--pop)}
     var o=new IntersectionObserver(function(es){if(!es[0].isIntersecting)return;o.disconnect();var t0=performance.now();
       (function step(t){var p=Math.min((t-t0)/1200,1),e=1-Math.pow(1-p,3);el.textContent=Math.round(end*e);if(p<1)requestAnimationFrame(step)})(t0)},{threshold:.6});
     o.observe(el);
+  });
+
+  /* slide dots, counter, keyboard */
+  var slides=[].slice.call(document.querySelectorAll('.slide')),dots=document.getElementById('dots'),cnt=document.getElementById('count');
+  slides.forEach(function(sl,i){if(!sl.id)sl.id='slide-'+i;var a=document.createElement('a');a.href='#'+sl.id;a.dataset.t=sl.dataset.t||('Slide '+(i+1));a.setAttribute('aria-label',a.dataset.t);dots.appendChild(a)});
+  var da=[].slice.call(dots.children);
+  function setOn(i){da.forEach(function(d,k){d.classList.toggle('on',k===i);if(k===i)d.setAttribute('aria-current','true');else d.removeAttribute('aria-current')});cnt.textContent=('0'+(i+1)).slice(-2)+' / '+('0'+slides.length).slice(-2)}
+  setOn(0);
+  if('IntersectionObserver' in window){
+    var so=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting&&e.intersectionRatio>=.5)setOn(slides.indexOf(e.target))})},{threshold:[.5,.75]});
+    slides.forEach(function(sl){so.observe(sl)});
+  }
+  addEventListener('keydown',function(e){
+    if(/INPUT|TEXTAREA|SUMMARY/.test(document.activeElement.tagName))return;
+    var k=e.key,cur=da.findIndex(function(d){return d.classList.contains('on')});
+    if(k==='ArrowDown'||k==='PageDown'||k==='ArrowRight'){slides[Math.min(cur+1,slides.length-1)].scrollIntoView({behavior:reduce?'auto':'smooth'});e.preventDefault()}
+    if(k==='ArrowUp'||k==='PageUp'||k==='ArrowLeft'){slides[Math.max(cur-1,0)].scrollIntoView({behavior:reduce?'auto':'smooth'});e.preventDefault()}
   });
 
   if(reduce)return;
