@@ -86,11 +86,15 @@ h1,h2,h3{font-family:var(--font-display);margin:0}
 
 /* stats strip */
 .stats{background:var(--surface);border-bottom:1px solid var(--line)}
-.stats .wrap{display:grid;grid-template-columns:repeat(4,1fr);gap:8px 12px;padding-block:36px}
-.stat{text-align:center}
-.stat b{display:block;font:800 clamp(2.6rem,7vw,5rem)/1 var(--font-display);color:var(--teal)}
+.stats .wrap{padding-block:36px}
+.stats__head{text-align:center;margin-bottom:34px}
+.stats__grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.stat{text-align:center;padding:26px 12px;background:var(--surface);border:1px solid var(--line);border-radius:22px;transition:transform .35s var(--pop),border-color .2s,box-shadow .2s}
+.stat:hover{transform:translateY(-6px);border-color:var(--teal);box-shadow:0 0 0 1px var(--teal),0 0 26px rgba(76,201,189,.4)}
+.stat b{display:block;font:800 clamp(2rem,4.2vw,3.2rem)/1 var(--font-display);color:var(--teal);white-space:nowrap;margin-bottom:8px}
 .stat span{font-size:1rem;color:var(--muted)}
-.stats-title{margin:0 0 28px;text-align:center}
+.stats-title{margin:6px 0 0;text-align:center;font:800 clamp(2rem,5vw,3.4rem)/1.05 var(--font-display)}
+@media(max-width:760px){.stats__grid{grid-template-columns:repeat(2,1fr);gap:12px}.stat{padding:20px 8px}}
 @media(max-width:560px){.stats .wrap{grid-template-columns:repeat(2,1fr);row-gap:18px}}
 
 /* sections */
@@ -461,11 +465,16 @@ details[open] p{animation:rise .4s var(--pop)}
 
 <section class="stats slide slide--alt" id="numbers" data-t="Numbers">
  <div class="wrap">
-  <p class="eyebrow" style="text-align:center">At a glance</p><h2 class="stats-title rv" style="font:800 clamp(2rem,5vw,3.4rem)/1 var(--font-display)">A place to keep learning</h2>
-  <div class="stat"><b data-count="15">15</b><span>hubs, games and tools</span></div>
-  <div class="stat"><b data-count="3">3</b><span>paths: UiTM, Public, STEM</span></div>
-  <div class="stat"><b>BM + EN</b><span>languages</span></div>
-  <div class="stat"><b>Free</b><span>no login needed</span></div>
+  <div class="stats__head">
+   <p class="eyebrow">At a glance</p>
+   <h2 class="stats-title rv">A place to keep learning</h2>
+  </div>
+  <div class="stats__grid">
+   <div class="stat rv"><b data-count="15">15</b><span>hubs, games and tools</span></div>
+   <div class="stat rv" style="--i:1"><b data-count="3">3</b><span>paths: UiTM, Public, STEM</span></div>
+   <div class="stat rv" style="--i:2"><b>BM + EN</b><span>languages</span></div>
+   <div class="stat rv" style="--i:3"><b>Free</b><span>no login needed</span></div>
+  </div>
  </div>
 </section>
 
