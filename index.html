@@ -898,7 +898,7 @@ details[open] p{animation:rise .4s var(--pop)}
 <script>
 /* "Help me improve": sends feedback to a Google Apps Script web app (see feedback/apps-script.gs) */
 (function(){
-  var FEEDBACK_URL = ''; /* paste the Apps Script Web app URL here (ends with /exec) */
+  var FEEDBACK_URL = 'https://script.google.com/macros/s/AKfycbwdQGx2c1KfpzO8NRN0AKMUMWzzDIPKjm4vc7ZqjTmuUjy7Vm4LIpGC6Xpx6I2YOyP5ag/exec'; /* paste the Apps Script Web app URL here (ends with /exec) */
   var fb=document.getElementById('fb'),form=document.getElementById('fb-form'),stars=document.getElementById('fb-stars'),msg=document.getElementById('fb-msg');
   var rating=0,opener=null,sending=false,SFX=window.SFX||{success:function(){},pop:function(){}};
   for(var i=1;i<=5;i++){(function(n){var b=document.createElement('button');b.type='button';b.textContent='\u2665';b.setAttribute('role','radio');b.setAttribute('aria-checked','false');b.setAttribute('aria-label',n+' heart'+(n>1?'s':''));
