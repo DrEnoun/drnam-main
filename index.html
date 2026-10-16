@@ -86,11 +86,15 @@ h1,h2,h3{font-family:var(--font-display);margin:0}
 
 /* stats strip */
 .stats{background:var(--surface);border-bottom:1px solid var(--line)}
-.stats .wrap{display:grid;grid-template-columns:repeat(4,1fr);gap:8px 12px;padding-block:36px}
-.stat{text-align:center}
-.stat b{display:block;font:800 clamp(2.6rem,7vw,5rem)/1 var(--font-display);color:var(--teal)}
+.stats .wrap{padding-block:36px}
+.stats__head{text-align:center;margin-bottom:34px}
+.stats__grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.stat{text-align:center;padding:26px 12px;background:var(--surface);border:1px solid var(--line);border-radius:22px;transition:transform .35s var(--pop),border-color .2s,box-shadow .2s}
+.stat:hover{transform:translateY(-6px);border-color:var(--teal);box-shadow:0 0 0 1px var(--teal),0 0 26px rgba(76,201,189,.4)}
+.stat b{display:block;font:800 clamp(2rem,4.2vw,3.2rem)/1 var(--font-display);color:var(--teal);white-space:nowrap;margin-bottom:8px}
 .stat span{font-size:1rem;color:var(--muted)}
-.stats-title{margin:0 0 28px;text-align:center}
+.stats-title{margin:6px 0 0;text-align:center;font:800 clamp(2rem,5vw,3.4rem)/1.05 var(--font-display)}
+@media(max-width:760px){.stats__grid{grid-template-columns:repeat(2,1fr);gap:12px}.stat{padding:20px 8px}}
 @media(max-width:560px){.stats .wrap{grid-template-columns:repeat(2,1fr);row-gap:18px}}
 
 /* sections */
@@ -359,6 +363,19 @@ details[open] p{animation:rise .4s var(--pop)}
 .fbbtn::before{content:"\2665  ";color:#fff}
 .fbbtn:hover{box-shadow:0 0 0 3px rgba(255,143,163,.4),0 10px 28px rgba(0,0,0,.4)}
 @media (prefers-reduced-motion:reduce){.fb *,.fbbtn{animation:none!important}}
+/* ===== sticker cards ===== */
+:root{--st-edge:#F7FBFA;--st-line:rgba(0,0,0,.45);--st-shadow:rgba(0,0,0,.4)}
+:root[data-theme="day"]{--st-edge:#FFFFFF;--st-line:rgba(17,32,46,.22);--st-shadow:rgba(17,32,46,.22)}
+.card,.step,.stat,details{border:4px solid var(--st-edge);border-radius:20px;box-shadow:0 0 0 1px var(--st-line),0 10px 18px -4px var(--st-shadow)}
+.card,.step,.stat{position:relative;overflow:hidden}
+.card::after,.step::after,.stat::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:1;background:linear-gradient(118deg,rgba(255,255,255,.2) 0%,rgba(255,255,255,.06) 28%,rgba(255,255,255,0) 40%),linear-gradient(315deg,rgba(255,255,255,.14) 0,rgba(255,255,255,0) 14%)}
+.card:nth-child(3n+1){--rot:-1.3deg}.card:nth-child(3n+2){--rot:1deg}.card:nth-child(3n){--rot:-.5deg}
+.step:nth-child(odd),.stat:nth-child(odd){--rot:-1.1deg}.step:nth-child(even),.stat:nth-child(even){--rot:1deg}
+.card:not(.rv),.rv.in.step,.rv.in.stat{transform:rotate(var(--rot,0deg))}
+.card:not(.rv):hover,.card:not(.rv):focus-visible,.rv.in.step:hover,.rv.in.stat:hover{transform:rotate(0deg) translateY(-7px) scale(1.03)}
+.card:hover,.card:focus-visible,.step:hover,.stat:hover{border-color:var(--st-edge);box-shadow:0 0 0 1px var(--st-line),0 0 26px rgba(76,201,189,.55),0 16px 26px -6px var(--st-shadow)}
+details{border-radius:18px}
+details[open]{border-color:var(--st-edge)}
 </style>
 </head>
 <body>
@@ -461,11 +478,16 @@ details[open] p{animation:rise .4s var(--pop)}
 
 <section class="stats slide slide--alt" id="numbers" data-t="Numbers">
  <div class="wrap">
-  <p class="eyebrow" style="text-align:center">At a glance</p><h2 class="stats-title rv" style="font:800 clamp(2rem,5vw,3.4rem)/1 var(--font-display)">A place to keep learning</h2>
-  <div class="stat"><b data-count="15">15</b><span>hubs, games and tools</span></div>
-  <div class="stat"><b data-count="3">3</b><span>paths: UiTM, Public, STEM</span></div>
-  <div class="stat"><b>BM + EN</b><span>languages</span></div>
-  <div class="stat"><b>Free</b><span>no login needed</span></div>
+  <div class="stats__head">
+   <p class="eyebrow">At a glance</p>
+   <h2 class="stats-title rv">A place to keep learning</h2>
+  </div>
+  <div class="stats__grid">
+   <div class="stat rv"><b data-count="15">15</b><span>hubs, games and tools</span></div>
+   <div class="stat rv" style="--i:1"><b data-count="3">3</b><span>paths: UiTM, Public, STEM</span></div>
+   <div class="stat rv" style="--i:2"><b>BM + EN</b><span>languages</span></div>
+   <div class="stat rv" style="--i:3"><b>Free</b><span>no login needed</span></div>
+  </div>
  </div>
 </section>
 
