@@ -404,6 +404,11 @@ details[open]{border-color:var(--st-edge)}
 @media(pointer:coarse),(max-width:700px){.snk__pad{display:grid}.snk__stage canvas{height:clamp(340px,54svh,440px)}}
 .play--snk .sub{display:none}.play--snk .ptabs{margin-top:12px}.play--snk .snk{margin-top:12px}
 #play>.wrap{padding-bottom:84px}
+.snk{touch-action:manipulation}
+.snk,.snk *{-webkit-tap-highlight-color:transparent}
+.snk__stage,.snk__pad{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+html.snk-playing,html.snk-playing body{overscroll-behavior:none}
+html.snk-lock{overflow:hidden;scroll-snap-type:none}
 .snk__speed{display:flex;align-items:center;gap:6px}.snk__speed span{font:700 .85rem var(--font-display);color:var(--hero-muted)}.snk__speed .mbtn{padding:5px 13px;font-size:.82rem}
 </style>
 </head>
@@ -1147,6 +1152,12 @@ details[open]{border-color:var(--st-edge)}
   var state='idle',snake=[],prev=[],dir={x:1,y:0},queue=[],foods=[],acc=0,baseMs=300,stepMs=300,time=0,eaten=0,best=1,run=false,last=0,raf=0,vis=false,wig=0,flash=0;
   try{best=+localStorage.getItem('drnam-main:snake-best')||1}catch(e){}bestEl.textContent=best;
   function say(t){msg.textContent=t}
+  var coarse=matchMedia('(pointer:coarse)').matches||innerWidth<700,root=document.documentElement;
+  /* lock the screen while playing: no scrolling, pull-to-refresh, pinch or double-tap zoom */
+  function lock(on){root.classList.toggle('snk-playing',on);root.classList.toggle('snk-lock',on&&coarse);cv.style.touchAction=on?'none':'pan-y'}
+  document.addEventListener('touchmove',function(e){if(state==='play'&&e.target.closest&&e.target.closest('.snk__stage,.snk__pad'))e.preventDefault()},{passive:false});
+  ['gesturestart','gesturechange'].forEach(function(n){document.addEventListener(n,function(e){if(state==='play')e.preventDefault()})});
+  cv.addEventListener('dblclick',function(e){e.preventDefault()});
   function resize(){var r=cv.getBoundingClientRect();if(!r.width)return;dpr=Math.min(2,window.devicePixelRatio||1);W=r.width;H=r.height;cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);
     if(state==='idle'||state==='over'){var cs=W<560?32:36;C=Math.max(8,Math.floor(W/cs));R=Math.max(6,Math.floor(H/cs))}
     cell=Math.min(W/C,H/R);ox=(W-cell*C)/2;oy=(H-cell*R)/2;draw()}
@@ -1156,14 +1167,15 @@ details[open]{border-color:var(--st-edge)}
       var a;do{a=AA[rnd(AA.length)]}while(foods.some(function(f){return f.aa===a}));foods.push({x:x,y:y,aa:a,ph:Math.random()*6})}}
   function chip(a){var s=document.createElement('span');s.className='snk__chip';s.style.background=COLS[a[4]];s.textContent=a[1];s.title=a[2];seq.appendChild(s)}
   function start(){
-    state='play';cv.style.touchAction='none';ov.hidden=true;eaten=1;stepMs=baseMs;acc=0;queue=[];dir={x:1,y:0};
+    if(coarse){var r0=cv.getBoundingClientRect();window.scrollTo({top:Math.max(0,scrollY+r0.top-72),behavior:'instant'})}
+    state='play';lock(true);ov.hidden=true;eaten=1;stepMs=baseMs;acc=0;queue=[];dir={x:1,y:0};
     var cx=Math.floor(C/2),cy=Math.floor(R/2);
     snake=[{x:cx,y:cy,aa:null},{x:cx-1,y:cy,aa:AA[12]}];prev=snake.map(function(s){return{x:s.x,y:s.y}});
     foods=[];spawn();seq.innerHTML='';chip(AA[12]);lenEl.textContent=1;pauseBtn.textContent='Pause';
     say('Start codon AUG makes methionine (M). Every protein begins with it!');SFX.pop();
     cv.focus({preventScroll:true});go()}
   function over(){
-    state='over';cv.style.touchAction='pan-y';var n=snake.length-1;SFX.boing();
+    state='over';lock(false);var n=snake.length-1;SFX.boing();
     if(n>best){best=n;bestEl.textContent=best;try{localStorage.setItem('drnam-main:snake-best',best)}catch(e){}}
     ovTitle.innerHTML='Oops! <span>Tangled!</span>';
     ovText.textContent='Your protein has '+n+' amino acid'+(n>1?'s':'')+'. '+(n>=best&&n>1?'That is your best!':'Try again, you can do it!');
@@ -1244,7 +1256,7 @@ details[open]{border-color:var(--st-edge)}
       if(d){e.preventDefault();e.stopImmediatePropagation();if(state==='play')dirKey(d);return}
       if(e.key===' '||e.key==='p'||e.key==='P'){if(document.activeElement===cv||document.activeElement===document.body){e.preventDefault();e.stopImmediatePropagation();toggle()}}}
   },true);
-  function toggle(){if(state==='play'){state='paused';cv.style.touchAction='pan-y';pauseBtn.textContent='Resume';say('Paused. Take a little break!')}else if(state==='paused'){state='play';cv.style.touchAction='none';pauseBtn.textContent='Pause';acc=0;go()}}
+  function toggle(){if(state==='play'){state='paused';lock(false);pauseBtn.textContent='Resume';say('Paused. Take a little break!')}else if(state==='paused'){state='play';lock(true);pauseBtn.textContent='Pause';acc=0;go()}}
   startBtn.addEventListener('click',function(){if(state==='idle'||state==='over')start()});
   pauseBtn.addEventListener('click',function(){toggle()});
   [].forEach.call(document.querySelectorAll('.snk__pad button'),function(b){b.addEventListener('pointerdown',function(e){e.preventDefault();dirKey(b.dataset.d);if(state==='paused')toggle()})});
