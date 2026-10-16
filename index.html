@@ -26,7 +26,7 @@ html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;scroll-padding-top:60p
 .slide>.wrap{width:100%;padding-block:36px}
 .slide--dark{background:radial-gradient(120% 140% at 85% 0%,var(--night-2) 0%,var(--night) 60%);color:var(--hero-ink)}
 .slide--dark .eyebrow{color:var(--spark)}
-.slide--dark .sub{color:var(--hero-muted)}
+.s.slide--dark .sub{color:var(--hero-muted)}
 .slide--alt{background:var(--surface)}
 .slide__n{position:absolute;right:max(16px,4vw);bottom:10px;font:800 clamp(5rem,16vw,11rem)/1 var(--font-display);color:currentColor;opacity:.06;pointer-events:none;user-select:none}
 body{overflow-x:clip;margin:0;background:var(--bg);color:var(--ink);font:1rem/1.6 var(--font-body)}
@@ -246,6 +246,43 @@ details[open] p{animation:rise .4s var(--pop)}
   *,*::before,*::after{animation:none!important;transition:none!important}
   .rv{opacity:1;transform:none}html{scroll-behavior:auto}.marquee div{animation:none}.progress{display:none}
 }
+/* ===== glow cards ===== */
+.card,.opt,.step,.tab,.mbtn{position:relative;isolation:isolate}
+.card::before,.opt::before,.step::before,.tab::before,.mbtn::before{content:"";position:absolute;inset:0;z-index:-1;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity .25s;background:radial-gradient(230px circle at var(--mx,50%) var(--my,50%),rgba(212,255,58,.6),rgba(76,201,189,.2) 45%,transparent 72%)}
+.card:hover::before,.opt:hover::before,.step:hover::before,.tab:hover::before,.mbtn:hover::before,.card:focus-visible::before,.opt:focus-visible::before{opacity:1}
+.card:hover,.card:focus-visible{border-color:var(--teal);box-shadow:0 0 0 1px var(--teal),0 0 28px rgba(76,201,189,.55),0 14px 30px rgba(11,26,38,.16)}
+.step:hover{box-shadow:0 0 0 1px var(--teal),0 0 28px rgba(76,201,189,.5)}
+.opt:hover{box-shadow:0 0 0 1px var(--spark),0 0 24px rgba(212,255,58,.4)}
+.tab:hover{box-shadow:0 0 18px rgba(76,201,189,.55)}
+/* ===== sound button ===== */
+.sndbtn{display:grid;place-items:center;width:38px;height:38px;border-radius:50%;border:1px solid rgba(238,246,244,.3);background:transparent;color:var(--hero-ink);cursor:pointer;transition:box-shadow .2s,border-color .2s}
+.sndbtn:hover,.sndbtn:focus-visible{border-color:var(--spark);box-shadow:0 0 14px rgba(212,255,58,.5);outline:none}
+.sndbtn .x{display:none}
+.sndbtn[aria-pressed="false"] .w{display:none}.sndbtn[aria-pressed="false"] .x{display:block}
+.nav .wrap{gap:10px}
+.nav .wrap>nav{margin-left:auto}
+/* ===== molecule playground ===== */
+.mol{margin-top:22px}
+.mol__chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.mbtn{font:700 .92rem var(--font-display);cursor:pointer;color:var(--hero-ink);background:rgba(238,246,244,.06);border:2px solid rgba(238,246,244,.28);border-radius:999px;padding:7px 16px;transition:transform .25s var(--pop),border-color .2s,background .2s,box-shadow .2s}
+.mbtn:hover{transform:translateY(-2px);border-color:var(--spark);box-shadow:0 0 18px rgba(212,255,58,.35)}
+.mbtn:active{transform:scale(.94)}
+.mbtn:focus-visible{outline:3px solid var(--spark);outline-offset:2px}
+.mbtn[aria-pressed="true"]{background:var(--spark);border-color:var(--spark);color:var(--on-spark)}
+.mbtn--go{background:var(--spark);border-color:var(--spark);color:var(--on-spark)}
+.mol__stage{position:relative;border-radius:24px;overflow:hidden;background:radial-gradient(120% 120% at 50% 0%,rgba(76,201,189,.16),rgba(6,13,20,.5) 70%);border:1px solid rgba(238,246,244,.16)}
+.mol__stage canvas{display:block;width:100%;height:clamp(250px,44svh,400px);touch-action:pan-y;cursor:grab;outline:none}
+.mol__stage canvas:active{cursor:grabbing}
+.mol__stage canvas:focus-visible{box-shadow:inset 0 0 0 3px var(--spark)}
+.mol__bubble{position:absolute;left:14px;top:12px;max-width:min(70%,420px);background:#fff;color:var(--ink);font:600 .95rem/1.35 var(--font-body);padding:9px 14px;border-radius:16px 16px 16px 4px;box-shadow:0 8px 24px rgba(0,0,0,.35);pointer-events:none;animation:rise .4s var(--pop)}
+.mol__bar{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px;margin-top:12px}
+.mol__bar .sp{flex:1}
+.mol__bar .zl{min-width:3.2em;text-align:center;font:700 .9rem var(--font-display);color:var(--hero-muted)}
+.mol__count{font:700 .9rem var(--font-display);color:var(--hero-muted)}
+.mol__count b{color:var(--spark)}
+.mol__hint{margin:10px 0 0;font-size:.85rem;color:var(--hero-muted)}
+.mbtn--sq{width:40px;padding:7px 0;text-align:center;font-size:1.15rem;line-height:1}
+@media(max-width:700px){.mol__bubble{position:relative;left:auto;top:auto;max-width:none;margin:10px 12px 12px;border-radius:16px;box-shadow:none}}
 </style>
 </head>
 <body>
@@ -278,7 +315,8 @@ details[open] p{animation:rise .4s var(--pop)}
 <header class="nav">
  <div class="wrap">
   <a class="brand" href="#top"><img src="img/drnam-180.png" alt="">Chemistry with Dr. NAM</a>
-  <nav aria-label="Sections"><a href="#how">How it works</a><a href="#explore">Explore</a><a href="#about">About</a><a href="#faq">FAQ</a><a class="pill" href="#explore">Start</a></nav>
+  <nav aria-label="Sections"><a href="#how">How it works</a><a href="#play">Play</a><a href="#explore">Explore</a><a href="#about">About</a><a href="#faq">FAQ</a><a class="pill" href="#explore">Start</a></nav>
+  <button class="sndbtn" id="sound-btn" type="button" aria-pressed="true" aria-label="Sound effects: on"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4z" fill="currentColor"/><path class="w" d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/><path class="x" d="M16 9l5 6M21 9l-5 6"/></svg></button>
  </div>
 </header>
 
@@ -322,6 +360,30 @@ details[open] p{animation:rise .4s var(--pop)}
    <div class="step rv" style="--i:0"><span class="n">1</span><h3>Learn</h3><p>Open a study hub. Read the slides and warm-ups, one chapter at a time.</p></div>
    <div class="step rv" style="--i:1"><span class="n">2</span><h3>Practise</h3><p>Try a game. Repeating ideas in a game helps them stick in your memory.</p></div>
    <div class="step rv" style="--i:2"><span class="n">3</span><h3>Grow</h3><p>Go further with research tools and try real drug design, step by step.</p></div>
+  </div>
+ </div></section>
+
+ <section class="s slide slide--dark" id="play" data-t="Play"><div class="wrap">
+  <p class="eyebrow">Let us play</p>
+  <h2>Poke a molecule!</h2>
+  <p class="sub">Meet my naughty little molecules. Poke them, drag their atoms and zoom in to see the electrons. They have feelings!</p>
+  <div class="mol">
+   <div class="mol__chips" id="mol-chips" role="group" aria-label="Choose a molecule"></div>
+   <div class="mol__stage">
+    <canvas id="mol" tabindex="0" role="img" aria-label="A cute molecule you can poke. Press Enter to poke it. Plus and minus keys zoom."></canvas>
+    <div class="mol__bubble" id="mol-say" aria-live="polite">Psst... poke me!</div>
+   </div>
+   <div class="mol__bar">
+    <button class="mbtn mbtn--sq" id="mol-out" type="button" aria-label="Zoom out">&minus;</button>
+    <span class="zl" id="mol-zoom" aria-live="off">1.0x</span>
+    <button class="mbtn mbtn--sq" id="mol-in" type="button" aria-label="Zoom in">+</button>
+    <button class="mbtn" id="mol-reset" type="button">Reset</button>
+    <span class="sp"></span>
+    <button class="mbtn mbtn--go" id="mol-poke" type="button">Poke me!</button>
+    <button class="mbtn" id="mol-shake" type="button">Shake!</button>
+    <span class="mol__count">Pokes: <b id="mol-count">0</b></span>
+   </div>
+   <p class="mol__hint">Tap to poke. Drag an atom to stretch the molecule. Zoom in to see the electrons.</p>
   </div>
  </div></section>
 
@@ -393,6 +455,42 @@ details[open] p{animation:rise .4s var(--pop)}
  </div>
 </footer>
 
+<script>
+/* sound effects (made with the browser itself, no files) + glow follow */
+(function(){
+  var ctx=null,on=true,KEY='drnam-main:sound:v1',last=0;
+  try{on=localStorage.getItem(KEY)!=='off'}catch(e){}
+  function ac(){if(!ctx){var C=window.AudioContext||window.webkitAudioContext;if(!C)return null;try{ctx=new C()}catch(e){return null}}if(ctx.state==='suspended')ctx.resume();return ctx}
+  function tone(f0,f1,d,type,g,delay){
+    if(!on)return;var c=ac();if(!c)return;var t=c.currentTime+(delay||0);
+    var o=c.createOscillator(),v=c.createGain();o.type=type||'sine';
+    o.frequency.setValueAtTime(f0,t);if(f1&&f1!==f0)o.frequency.exponentialRampToValueAtTime(f1,t+d);
+    v.gain.setValueAtTime(.0001,t);v.gain.exponentialRampToValueAtTime(g||.08,t+.012);v.gain.exponentialRampToValueAtTime(.0001,t+d);
+    o.connect(v);v.connect(c.destination);o.start(t);o.stop(t+d+.03);
+  }
+  var S=window.SFX={
+    hover:function(){var n=performance.now();if(n-last<80)return;last=n;tone(900+Math.random()*200,1300,.05,'sine',.03)},
+    pop:function(){tone(520,180,.12,'sine',.11)},
+    tab:function(){tone(520,780,.08,'triangle',.08);tone(780,1040,.09,'triangle',.07,.07)},
+    boing:function(){tone(220,520,.28,'sine',.13);tone(440,1040,.28,'triangle',.05)},
+    giggle:function(){[0,.09,.18].forEach(function(d,i){tone(700+i*140,900+i*140,.08,'square',.035,d)})},
+    whoosh:function(){tone(180,900,.35,'sawtooth',.035);tone(900,200,.3,'sine',.05,.18)},
+    success:function(){[523,659,784,1047].forEach(function(f,i){tone(f,f,.16,'triangle',.08,i*.09)})},
+    isOn:function(){return on}
+  };
+  var btn=document.getElementById('sound-btn');
+  function paint(){btn.setAttribute('aria-pressed',on);btn.setAttribute('aria-label','Sound effects: '+(on?'on':'off'))}
+  paint();
+  btn.addEventListener('click',function(){on=!on;try{localStorage.setItem(KEY,on?'on':'off')}catch(e){}paint();if(on){ac();S.success()}});
+  addEventListener('pointerdown',function(){if(on)ac()},{once:true,capture:true});
+  var HOT='.card,.opt,.tab,.mbtn,.step,.btn,summary,.dots a,.sndbtn,.wiz__skip';
+  document.addEventListener('pointerover',function(e){if(e.pointerType!=='mouse')return;var t=e.target.closest&&e.target.closest(HOT);if(t&&!(e.relatedTarget&&t.contains(e.relatedTarget)))S.hover()});
+  document.addEventListener('click',function(e){var t=e.target.closest&&e.target.closest(HOT);if(!t||t.id==='sound-btn'||t.id==='mol-poke'||t.id==='mol-shake')return;
+    if(t.id==='wiz-go')S.success();else if(t.classList.contains('tab'))S.tab();else S.pop()});
+  /* glow follows the pointer */
+  document.addEventListener('pointermove',function(e){var t=e.target.closest&&e.target.closest('.card,.opt,.step,.tab,.mbtn');if(!t)return;var r=t.getBoundingClientRect();t.style.setProperty('--mx',(e.clientX-r.left)+'px');t.style.setProperty('--my',(e.clientY-r.top)+'px')},{passive:true});
+})();
+</script>
 <script>
 (function(){
   var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -520,5 +618,180 @@ details[open] p{animation:rise .4s var(--pop)}
 })();
 </script>
 
+<script>
+/* Naughty kawaii molecules: poke, drag, zoom */
+(function(){
+  var cv=document.getElementById('mol');if(!cv)return;
+  var g=cv.getContext('2d'),reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var SFX=window.SFX||{boing:function(){},giggle:function(){},whoosh:function(){},pop:function(){}};
+  var say=document.getElementById('mol-say'),cntEl=document.getElementById('mol-count'),zlEl=document.getElementById('mol-zoom'),chips=document.getElementById('mol-chips');
+  var COL={O:'#ff8fa3',H:'#D4FF3A',C:'#b8a6ff',N:'#7cc6ff'};
+  var DEFS=[
+    {id:'water',name:'Water (H₂O)',atoms:[['O',0,-30,46],['H',-75,58,28],['H',75,58,28]],bonds:[[0,1,1],[0,2,1]],
+     intro:'Hi! I am water, H₂O. Two hydrogens and one oxygen. Poke me!',
+     facts:['My shape is bent, about 104.5 degrees. Not a straight line!','Oxygen pulls electrons harder, so I am a little bit negative on top.','Water molecules hold hands with each other. We call it hydrogen bonding.']},
+    {id:'co2',name:'Carbon dioxide (CO₂)',atoms:[['C',0,0,42],['O',-108,0,34],['O',108,0,34]],bonds:[[0,1,2],[0,2,2]],
+     intro:'I am carbon dioxide, CO₂. Straight like a stick!',
+     facts:['I am linear: O=C=O. All in one line.','I have two double bonds. We hold hands twice!','Plants love me. They turn me into food.']},
+    {id:'nh3',name:'Ammonia (NH₃)',atoms:[['N',0,-28,44],['H',-92,48,26],['H',0,96,26],['H',92,48,26]],bonds:[[0,1,1],[0,2,1],[0,3,1]],
+     intro:'I am ammonia, NH₃. I have a secret on my head...',
+     facts:['My secret is a lone pair of electrons.','My real shape is a tiny tent, called trigonal pyramid.','I smell very strong. Sorry!']},
+    {id:'ch4',name:'Methane (CH₄)',atoms:[['C',0,0,40],['H',-88,-68,24],['H',88,-68,24],['H',-88,68,24],['H',88,68,24]],bonds:[[0,1,1],[0,2,1],[0,3,1],[0,4,1]],
+     intro:'I am methane, CH₄. Four hydrogens around me!',
+     facts:['My four hydrogens spread out evenly, about 109.5 degrees.','I am the main part of natural gas.','I am nonpolar. I stay cool and balanced.']}
+  ];
+  var CHEEKY=['Hehe! That tickles!','Boop!','Hey! Be gentle with my bonds!','Do that again, I dare you.','Ouch! ...just kidding, I like it.','Stop it... no, keep going!','You poke like a chemist!','Wheee!'];
+  var MILE={5:'5 pokes! You are getting good at this.',10:'10 pokes! I am officially jiggly.',25:'25 pokes! You are the Poke Master!',50:'50 pokes! Maybe go and learn some chemistry now? Just kidding. Keep poking!'};
+  var W=300,H=250,dpr=1,zoom=1,zoomT=1,mol=null,atoms=[],bonds=[],count=0,factI=0,time=0,drag=null,ptr={x:0,y:0,in:false},running=false,lastT=0,raf=0;
+  var stars=[];for(var si=0;si<16;si++)stars.push({x:Math.random(),y:Math.random(),p:Math.random()*6,s:1+Math.random()*2});
+
+  function bubble(t){say.textContent=t;say.style.animation='none';void say.offsetWidth;say.style.animation=''}
+  function build(def){
+    mol=def;mol.cx=0;mol.cy=0;def.atoms.forEach(function(a){mol.cx+=a[1]/def.atoms.length;mol.cy+=a[2]/def.atoms.length});atoms=def.atoms.map(function(a){return{el:a[0],hx:a[1],hy:a[2],x:a[1],y:a[2],vx:0,vy:0,r:a[3],s:.1,sv:0,exp:'',et:0,blink:2+Math.random()*3}});
+    bonds=def.bonds.map(function(b){var A=atoms[b[0]],B=atoms[b[1]];return{i:b[0],j:b[1],o:b[2],len:Math.hypot(A.hx-B.hx,A.hy-B.hy)}});
+    zoomT=1;factI=0;bubble(def.intro);
+    [].forEach.call(chips.children,function(c){c.setAttribute('aria-pressed',c.dataset.id===def.id)});
+  }
+  DEFS.forEach(function(d){var b=document.createElement('button');b.type='button';b.className='mbtn';b.dataset.id=d.id;b.textContent=d.name;b.setAttribute('aria-pressed','false');
+    b.addEventListener('click',function(){build(d);SFX.boing();atoms.forEach(function(a){a.sv=6});draw()});chips.appendChild(b)});
+
+  function sc(){return Math.min(W/370,H/290)*zoom}
+  function toWorld(px,py){var k=sc();return{x:(px-W/2)/k+mol.cx,y:(py-H/2)/k+mol.cy}}
+  function hit(w){for(var i=atoms.length-1;i>=0;i--){var a=atoms[i];if(Math.hypot(w.x-a.x,w.y-a.y)<=a.r*1.12)return a}return null}
+  function react(a,name,dur){a.exp=name;a.et=dur}
+  function poke(a){
+    count++;cntEl.textContent=count;
+    a.sv=-9;
+    atoms.forEach(function(o){if(o===a)return;var dx=o.x-a.x,dy=o.y-a.y,d=Math.hypot(dx,dy)||1;o.vx+=dx/d*170;o.vy+=dy/d*170;o.sv=-3});
+    a.vx+=(Math.random()-.5)*120;a.vy+=(Math.random()-.5)*120;
+    atoms.forEach(function(o){react(o,o===a?'surprise':'giggle',o===a?.5:1)});
+    a.et=.5;SFX.boing();if(count%3===0)setTimeout(SFX.giggle,120);
+    if(MILE[count])bubble(MILE[count]);
+    else if(count%4===0){bubble(mol.facts[factI++%mol.facts.length])}
+    else bubble(CHEEKY[Math.floor(Math.random()*CHEEKY.length)]);
+  }
+  function setZoom(z){zoomT=Math.max(.6,Math.min(3,z))}
+
+  /* pointer */
+  function pos(e){var r=cv.getBoundingClientRect();return{x:e.clientX-r.left,y:e.clientY-r.top}}
+  cv.addEventListener('pointerdown',function(e){
+    var p=pos(e);ptr.x=p.x;ptr.y=p.y;var w=toWorld(p.x,p.y),a=hit(w);
+    if(a){drag={a:a,sx:p.x,sy:p.y,moved:false,t:performance.now()};try{cv.setPointerCapture(e.pointerId)}catch(x){}}
+    else{bubble('Poke ME, not the empty space!')}
+    start();
+  });
+  cv.addEventListener('pointermove',function(e){
+    var p=pos(e);ptr.x=p.x;ptr.y=p.y;ptr.in=true;
+    if(!drag)return;
+    if(!drag.moved&&Math.hypot(p.x-drag.sx,p.y-drag.sy)>7){drag.moved=true;bubble('Wheee! Stretching my bonds!');SFX.whoosh();atoms.forEach(function(o){react(o,o===drag.a?'squeeze':'giggle',.9)})}
+    if(drag.moved){var w=toWorld(p.x,p.y),k=sc(),lx=W/2/k*.92,ly=H/2/k*.92;drag.a.x=Math.max(mol.cx-lx,Math.min(mol.cx+lx,w.x));drag.a.y=Math.max(mol.cy-ly,Math.min(mol.cy+ly,w.y));drag.a.vx=drag.a.vy=0;drag.a.et=.3;drag.a.exp='squeeze'}
+  });
+  function up(){if(!drag)return;if(!drag.moved)poke(drag.a);else{drag.a.sv=5;SFX.pop()}drag=null}
+  cv.addEventListener('pointerup',up);cv.addEventListener('pointercancel',function(){drag=null});
+  cv.addEventListener('pointerleave',function(){ptr.in=false});
+  cv.addEventListener('wheel',function(e){if(!e.ctrlKey&&!e.metaKey)return;e.preventDefault();setZoom(zoomT*Math.exp(-e.deltaY*.01));start()},{passive:false});
+  cv.addEventListener('keydown',function(e){
+    if(e.key==='Enter'||e.key===' '){e.preventDefault();poke(atoms[0]);start()}
+    else if(e.key==='+'||e.key==='='){setZoom(zoomT+.3);start()}
+    else if(e.key==='-'){setZoom(zoomT-.3);start()}
+    else if(e.key==='0'){setZoom(1);start()}
+  });
+  document.getElementById('mol-in').addEventListener('click',function(){setZoom(zoomT+.35);SFX.pop();start()});
+  document.getElementById('mol-out').addEventListener('click',function(){setZoom(zoomT-.35);SFX.pop();start()});
+  document.getElementById('mol-reset').addEventListener('click',function(){setZoom(1);atoms.forEach(function(a){a.x=a.hx;a.y=a.hy;a.vx=a.vy=0});SFX.pop();start()});
+  document.getElementById('mol-poke').addEventListener('click',function(){poke(atoms[0]);start()});
+  document.getElementById('mol-shake').addEventListener('click',function(){atoms.forEach(function(a){a.vx+=(Math.random()-.5)*900;a.vy+=(Math.random()-.5)*900;a.sv=-5;react(a,'giggle',1.2)});SFX.whoosh();setTimeout(SFX.giggle,200);bubble('Wheeeee! Earthquake!');start()});
+
+  /* physics */
+  function step(dt){
+    time+=dt;
+    atoms.forEach(function(a,i){
+      if(drag&&drag.moved&&drag.a===a)return;
+      var bob=reduce?0:Math.sin(time*1.6+i*1.3)*4;
+      a.vx+=(-70*(a.x-a.hx)-0)*dt;a.vy+=(-70*(a.y-(a.hy+bob)))*dt;
+    });
+    bonds.forEach(function(b){var A=atoms[b.i],B=atoms[b.j],dx=B.x-A.x,dy=B.y-A.y,d=Math.hypot(dx,dy)||1,f=110*(d-b.len),fx=dx/d*f,fy=dy/d*f;
+      A.vx+=fx*dt;A.vy+=fy*dt;B.vx-=fx*dt;B.vy-=fy*dt});
+    var damp=Math.exp(-3.2*dt);
+    atoms.forEach(function(a){
+      if(!(drag&&drag.moved&&drag.a===a)){a.vx*=damp;a.vy*=damp;a.x+=a.vx*dt;a.y+=a.vy*dt}
+      a.sv+=(-140*(a.s-1)-9*a.sv)*dt;a.s+=a.sv*dt;
+      if(a.et>0){a.et-=dt;if(a.et<=0)a.exp=''}
+      a.blink-=dt;if(a.blink<-.14)a.blink=2+Math.random()*3.5;
+    });
+    zoom+=(zoomT-zoom)*Math.min(1,dt*9);
+    zlEl.textContent=zoom.toFixed(1)+'x';
+  }
+
+  /* drawing */
+  function face(a,k,lookX,lookY){
+    var r=a.r,er=r*.2,ex=r*.34,ey=-r*.1,exp=a.exp,blinking=a.blink<0&&exp==='';
+    var wink=exp===''&&a.blink<-.04&&(Math.floor(time*.35)%3===0);
+    g.fillStyle='#14202b';g.strokeStyle='#14202b';g.lineCap='round';g.lineWidth=Math.max(1.6,r*.07);
+    [-1,1].forEach(function(sd){
+      var cx=sd*ex+lookX*er*.5,cy=ey+lookY*er*.45;
+      if(exp==='giggle'){g.beginPath();g.arc(sd*ex,ey+er*.4,er*.9,Math.PI*1.1,Math.PI*1.9);g.stroke();return}
+      if(exp==='squeeze'){g.beginPath();if(sd<0){g.moveTo(sd*ex-er*.8,ey-er*.8);g.lineTo(sd*ex+er*.6,ey);g.lineTo(sd*ex-er*.8,ey+er*.8)}else{g.moveTo(sd*ex+er*.8,ey-er*.8);g.lineTo(sd*ex-er*.6,ey);g.lineTo(sd*ex+er*.8,ey+er*.8)}g.stroke();return}
+      if((blinking||(wink&&sd>0))){g.beginPath();g.moveTo(cx-er,ey);g.lineTo(cx+er,ey);g.stroke();return}
+      var big=exp==='surprise'?1.25:1;
+      g.beginPath();g.ellipse(cx,cy,er*.85*big,er*1.1*big,0,0,7);g.fill();
+      g.fillStyle='#fff';g.beginPath();g.arc(cx+er*.3,cy-er*.4,er*.36,0,7);g.fill();g.beginPath();g.arc(cx-er*.25,cy+er*.35,er*.16,0,7);g.fill();g.fillStyle='#14202b';
+    });
+    if(exp===''){/* naughty raised eyebrow */g.beginPath();g.moveTo(ex-er*.9,ey-er*1.8);g.lineTo(ex+er*.9,ey-er*2.3);g.stroke()}
+    /* blush */
+    g.fillStyle='rgba(255,92,140,'+(exp==='giggle'?.7:.5)+')';
+    [-1,1].forEach(function(sd){g.beginPath();g.ellipse(sd*r*.6,r*.2,r*.15,r*.09,0,0,7);g.fill()});
+    /* mouth */
+    var my=r*.3;g.fillStyle='#14202b';
+    if(exp==='surprise'){g.beginPath();g.ellipse(0,my+r*.06,r*.1,r*.14,0,0,7);g.fill()}
+    else if(exp==='giggle'||exp==='squeeze'){g.beginPath();g.moveTo(-r*.2,my-r*.04);g.quadraticCurveTo(0,my+r*.36,r*.2,my-r*.04);g.closePath();g.fill();g.fillStyle='#ff7aa2';g.beginPath();g.ellipse(0,my+r*.14,r*.1,r*.07,0,0,7);g.fill()}
+    else{/* smirk + tongue out */
+      g.beginPath();g.moveTo(-r*.17,my);g.quadraticCurveTo(-r*.06,my+r*.1,0,my);g.quadraticCurveTo(r*.06,my+r*.1,r*.17,my-r*.03);g.stroke();
+      g.fillStyle='#ff7aa2';g.beginPath();g.moveTo(r*.02,my+r*.03);g.quadraticCurveTo(r*.02,my+r*.27,r*.12,my+r*.2);g.quadraticCurveTo(r*.18,my+r*.1,r*.14,my+r*.01);g.closePath();g.fill();
+      g.strokeStyle='rgba(20,32,43,.45)';g.lineWidth=Math.max(1,r*.03);g.beginPath();g.moveTo(r*.09,my+r*.04);g.lineTo(r*.09,my+r*.15);g.stroke();
+    }
+  }
+  function draw(){
+    g.setTransform(dpr,0,0,dpr,0,0);g.clearRect(0,0,W,H);
+    stars.forEach(function(st){var a=reduce?.5:.3+.5*Math.abs(Math.sin(time*1.3+st.p));g.fillStyle='rgba(238,246,244,'+a.toFixed(2)+')';g.beginPath();g.arc(st.x*W,st.y*H,st.s,0,7);g.fill()});
+    var k=sc();g.save();g.translate(W/2,H/2);g.scale(k,k);g.translate(-mol.cx,-mol.cy);
+    /* bonds */
+    g.lineCap='round';
+    bonds.forEach(function(b){var A=atoms[b.i],B=atoms[b.j],dx=B.x-A.x,dy=B.y-A.y,d=Math.hypot(dx,dy)||1,nx=-dy/d,ny=dx/d;
+      g.strokeStyle='rgba(238,246,244,.92)';
+      if(b.o===2){g.lineWidth=7;[-6.5,6.5].forEach(function(o){g.beginPath();g.moveTo(A.x+nx*o,A.y+ny*o);g.lineTo(B.x+nx*o,B.y+ny*o);g.stroke()})}
+      else{g.lineWidth=14;g.beginPath();g.moveTo(A.x,A.y);g.lineTo(B.x,B.y);g.stroke()}});
+    var wp=ptr.in?toWorld(ptr.x,ptr.y):{x:0,y:80};
+    atoms.forEach(function(a,i){
+      var dx=wp.x-a.x,dy=wp.y-a.y,d=Math.hypot(dx,dy)||1,lk=Math.min(1,d/80),lx=dx/d*lk,ly=dy/d*lk;
+      g.save();g.translate(a.x,a.y);g.scale(1+(1-a.s)*.7,a.s);
+      g.shadowColor='rgba(0,0,0,.35)';g.shadowBlur=14;g.shadowOffsetY=5;
+      g.fillStyle=COL[a.el];g.beginPath();g.arc(0,0,a.r,0,7);g.fill();g.shadowColor='transparent';
+      var gr=g.createRadialGradient(-a.r*.35,-a.r*.4,a.r*.05,0,0,a.r);gr.addColorStop(0,'rgba(255,255,255,.6)');gr.addColorStop(.5,'rgba(255,255,255,0)');gr.addColorStop(1,'rgba(0,0,0,.12)');
+      g.fillStyle=gr;g.beginPath();g.arc(0,0,a.r,0,7);g.fill();
+      face(a,k,lx,ly);g.restore();
+      /* zoom reveals names and electrons */
+      var al=Math.max(0,Math.min(1,(zoom-1.3)/.6));
+      if(al>0){
+        g.globalAlpha=al;g.fillStyle='#EEF6F4';g.font='800 15px League Spartan, system-ui, sans-serif';g.textAlign='center';g.fillText(a.el,a.x,a.y-a.r*a.s-9);
+        g.fillStyle='#8ff0ff';for(var e=0;e<2;e++){var ang=(reduce?0:time*(1.6+e*.4))+e*3.14159+i,rr=a.r*1.32;g.beginPath();g.arc(a.x+Math.cos(ang)*rr,a.y+Math.sin(ang)*rr*.7,3.2,0,7);g.fill()}
+        g.globalAlpha=1}
+    });
+    g.restore();
+  }
+  function frame(t){
+    if(!running)return;var dt=Math.min(.033,(t-lastT)/1000||.016);lastT=t;
+    step(dt);draw();raf=requestAnimationFrame(frame);
+  }
+  function start(){if(running||!vis)return;running=true;lastT=performance.now();raf=requestAnimationFrame(frame)}
+  function resize(){var r=cv.getBoundingClientRect();dpr=Math.min(2,window.devicePixelRatio||1);W=Math.max(200,r.width);H=Math.max(200,r.height);cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);draw()}
+  var vis=false;
+  if('ResizeObserver' in window)new ResizeObserver(resize).observe(cv);else addEventListener('resize',resize);
+  if('IntersectionObserver' in window)new IntersectionObserver(function(es){vis=es[0].isIntersecting;if(vis)start();else{running=false;cancelAnimationFrame(raf)}}).observe(cv);else{vis=true}
+  build(DEFS[0]);resize();start();
+  /* tiny hello when the slide first appears */
+  setTimeout(function(){atoms.forEach(function(a){a.sv=5})},600);
+})();
+</script>
 </body>
 </html>
