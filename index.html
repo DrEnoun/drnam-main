@@ -485,7 +485,7 @@ details[open] p{animation:rise .4s var(--pop)}
  <section class="s slide slide--dark" id="play" data-t="Play"><div class="wrap">
   <p class="eyebrow">Let us play</p>
   <h2>Poke a molecule!</h2>
-  <p class="sub">Meet my naughty little molecules. Poke them, drag their atoms and zoom in to see the electrons. They have feelings!</p>
+  <p class="sub">Meet my happy little molecules. Poke them, drag their atoms and zoom in to see the electrons. They love to play!</p>
   <div class="mol">
    <div class="mol__chips" id="mol-chips" role="group" aria-label="Choose a molecule"></div>
    <div class="mol__stage">
@@ -763,8 +763,8 @@ details[open] p{animation:rise .4s var(--pop)}
      intro:'I am methane, CH₄. Four hydrogens around me!',
      facts:['My four hydrogens spread out evenly, about 109.5 degrees.','I am the main part of natural gas.','I am nonpolar. I stay cool and balanced.']}
   ];
-  var CHEEKY=['Hehe! That tickles!','Boop!','Hey! Be gentle with my bonds!','Do that again, I dare you.','Ouch! ...just kidding, I like it.','Stop it... no, keep going!','You poke like a chemist!','Wheee!'];
-  var MILE={5:'5 pokes! You are getting good at this.',10:'10 pokes! I am officially jiggly.',25:'25 pokes! You are the Poke Master!',50:'50 pokes! Maybe go and learn some chemistry now? Just kidding. Keep poking!'};
+  var CHEEKY=['Hehe! That tickles!','Boop!','Wheee!','Yay! Again, again!','Giggle giggle!','Bouncy bouncy!','You are a great little chemist!','That was so fun!','Hello, friend!'];
+  var MILE={5:'5 pokes! You are so good at this!',10:'10 pokes! I am so jiggly now!',25:'25 pokes! You are the Poke Champion!',50:'50 pokes! Wow, you are a chemistry star!'};
   var W=300,H=250,dpr=1,zoom=1,zoomT=1,mol=null,atoms=[],bonds=[],count=0,factI=0,time=0,drag=null,ptr={x:0,y:0,in:false},running=false,lastT=0,raf=0;
   var stars=[];for(var si=0;si<16;si++)stars.push({x:Math.random(),y:Math.random(),p:Math.random()*6,s:1+Math.random()*2});
 
@@ -800,13 +800,13 @@ details[open] p{animation:rise .4s var(--pop)}
   cv.addEventListener('pointerdown',function(e){
     var p=pos(e);ptr.x=p.x;ptr.y=p.y;var w=toWorld(p.x,p.y),a=hit(w);
     if(a){drag={a:a,sx:p.x,sy:p.y,moved:false,t:performance.now()};try{cv.setPointerCapture(e.pointerId)}catch(x){}}
-    else{bubble('Poke ME, not the empty space!')}
+    else{bubble('Over here! I am the molecule!')}
     start();
   });
   cv.addEventListener('pointermove',function(e){
     var p=pos(e);ptr.x=p.x;ptr.y=p.y;ptr.in=true;
     if(!drag)return;
-    if(!drag.moved&&Math.hypot(p.x-drag.sx,p.y-drag.sy)>7){drag.moved=true;bubble('Wheee! Stretching my bonds!');SFX.whoosh();atoms.forEach(function(o){react(o,o===drag.a?'squeeze':'giggle',.9)})}
+    if(!drag.moved&&Math.hypot(p.x-drag.sx,p.y-drag.sy)>7){drag.moved=true;bubble('Wheee! I am stretching!');SFX.whoosh();atoms.forEach(function(o){react(o,o===drag.a?'squeeze':'giggle',.9)})}
     if(drag.moved){var w=toWorld(p.x,p.y),k=sc(),lx=W/2/k*.92,ly=H/2/k*.92;drag.a.x=Math.max(mol.cx-lx,Math.min(mol.cx+lx,w.x));drag.a.y=Math.max(mol.cy-ly,Math.min(mol.cy+ly,w.y));drag.a.vx=drag.a.vy=0;drag.a.et=.3;drag.a.exp='squeeze'}
   });
   function up(){if(!drag)return;if(!drag.moved)poke(drag.a);else{drag.a.sv=5;SFX.pop()}drag=null}
@@ -823,7 +823,7 @@ details[open] p{animation:rise .4s var(--pop)}
   document.getElementById('mol-out').addEventListener('click',function(){setZoom(zoomT-.35);SFX.pop();start()});
   document.getElementById('mol-reset').addEventListener('click',function(){setZoom(1);atoms.forEach(function(a){a.x=a.hx;a.y=a.hy;a.vx=a.vy=0});SFX.pop();start()});
   document.getElementById('mol-poke').addEventListener('click',function(){poke(atoms[0]);start()});
-  document.getElementById('mol-shake').addEventListener('click',function(){atoms.forEach(function(a){a.vx+=(Math.random()-.5)*900;a.vy+=(Math.random()-.5)*900;a.sv=-5;react(a,'giggle',1.2)});SFX.whoosh();setTimeout(SFX.giggle,200);bubble('Wheeeee! Earthquake!');start()});
+  document.getElementById('mol-shake').addEventListener('click',function(){atoms.forEach(function(a){a.vx+=(Math.random()-.5)*900;a.vy+=(Math.random()-.5)*900;a.sv=-5;react(a,'giggle',1.2)});SFX.whoosh();setTimeout(SFX.giggle,200);bubble('Wheeeee! Shake shake shake!');start()});
 
   /* physics */
   function step(dt){
