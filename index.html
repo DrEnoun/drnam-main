@@ -139,6 +139,37 @@ footer{scroll-snap-align:end;border-top:1px solid var(--line)}
 footer .wrap{padding-block:20px 28px;color:var(--muted);font-size:.86rem;display:flex;flex-wrap:wrap;gap:6px 18px;justify-content:space-between}
 footer b{color:var(--ink)}
 
+/* welcome wizard */
+.wiz{position:fixed;inset:0;z-index:50;display:grid;place-items:center;padding:16px;background:rgba(6,13,20,.82);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.wiz[hidden]{display:none}
+.wiz__card{position:relative;width:min(720px,100%);max-height:calc(100svh - 32px);overflow:auto;background:radial-gradient(120% 140% at 85% 0%,var(--night-2),var(--night) 60%);color:var(--hero-ink);border-radius:24px;padding:clamp(22px,4vw,40px);box-shadow:0 30px 80px rgba(0,0,0,.5);animation:wizin .6s var(--pop)}
+@keyframes wizin{from{opacity:0;transform:scale(.8) translateY(30px)}to{opacity:1;transform:none}}
+.wiz__step{display:none}
+.wiz__step.on{display:block;animation:rise .5s var(--pop)}
+.wiz h2{font:800 clamp(1.8rem,5vw,2.8rem)/1.05 var(--font-display);margin:0 0 10px;letter-spacing:-.01em}
+.wiz h2 span{color:var(--spark)}
+.wiz p{margin:0 0 20px;color:var(--hero-muted);font-size:1.05rem}
+.wiz__badge{width:84px;height:84px;border-radius:50%;background:#fff;display:block;margin-bottom:14px;animation:bob 5s ease-in-out infinite}
+.wiz__opts{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:0 0 20px}
+.opt{font:inherit;text-align:left;cursor:pointer;color:var(--hero-ink);background:rgba(238,246,244,.07);border:2px solid rgba(238,246,244,.18);border-radius:16px;padding:14px 16px;transition:transform .3s var(--pop),border-color .2s,background .2s}
+.opt:hover{transform:translateY(-3px);border-color:var(--spark)}
+.opt:focus-visible{outline:3px solid var(--spark);outline-offset:2px}
+.opt strong{display:block;font:700 1.12rem var(--font-display)}
+.opt small{display:block;margin-top:2px;color:var(--hero-muted);font-size:.85rem;line-height:1.4}
+.opt[aria-pressed="true"],.opt[aria-checked="true"]{background:var(--spark);border-color:var(--spark);color:var(--on-spark);transform:scale(1.02)}
+.opt[aria-pressed="true"] small,.opt[aria-checked="true"] small{color:#2c3a1a}
+.wiz__bar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.wiz__dots{display:flex;gap:8px}
+.wiz__dots i{width:10px;height:10px;border-radius:50%;background:rgba(238,246,244,.25);transition:background .2s,transform .3s var(--pop)}
+.wiz__dots i.on{background:var(--spark);transform:scale(1.4)}
+.wiz__skip{font:600 .9rem var(--font-body);background:none;border:0;color:var(--hero-muted);cursor:pointer;text-decoration:underline;padding:6px}
+.wiz__skip:hover{color:var(--spark)}
+.wiz .btn[disabled]{opacity:.4;cursor:not-allowed;animation:none}
+button.btn{cursor:pointer;font-size:1rem}
+@media(max-width:560px){.wiz__opts{grid-template-columns:1fr}}
+.tab--change{border-style:dashed;color:var(--teal)}
+.tab--picks{background:var(--spark);border-color:var(--spark);color:var(--on-spark)}
+.tab--picks[aria-selected="true"]{background:var(--ink);border-color:var(--ink);color:var(--bg)}
 /* slide dots + hint */
 .dots{position:fixed;right:max(10px,env(safe-area-inset-right,0px));top:50%;transform:translateY(-50%);z-index:15;display:flex;flex-direction:column;gap:10px}
 .dots a{position:relative;display:block;width:12px;height:12px;border-radius:50%;background:transparent;border:2px solid var(--teal);transition:transform .3s var(--pop),background .2s}
@@ -210,6 +241,28 @@ details[open] p{animation:rise .4s var(--pop)}
 <body>
 
 <div class="progress" id="progress" aria-hidden="true"></div>
+<div class="wiz" id="wiz" role="dialog" aria-modal="true" aria-labelledby="wiz-t1" hidden>
+ <div class="wiz__card">
+  <div class="wiz__step on" data-step="1">
+   <img class="wiz__badge" src="img/drnam-180.png" alt="">
+   <h2 id="wiz-t1">Welcome to <span>Chemistry with Dr. NAM!</span></h2>
+   <p>Hi, I am Dr. NAM. Here you can learn chemistry with games, stories and fun tools. Let us find the best place for you. It only takes 2 small steps.</p>
+   <div class="wiz__bar"><button class="btn btn--spark" type="button" data-next>Let us start</button><button class="wiz__skip" type="button" data-skip>Skip, I will look around</button></div>
+  </div>
+  <div class="wiz__step" data-step="2">
+   <h2 id="wiz-t2">Who <span>are you?</span></h2>
+   <p>Pick the one that fits you best.</p>
+   <div class="wiz__opts" id="wiz-roles" role="radiogroup" aria-labelledby="wiz-t2"></div>
+   <div class="wiz__bar"><div class="wiz__dots" aria-hidden="true"><i></i><i class="on"></i><i></i></div><button class="wiz__skip" type="button" data-skip>Skip</button></div>
+  </div>
+  <div class="wiz__step" data-step="3">
+   <h2 id="wiz-t3">What do you want to <span>learn today?</span></h2>
+   <p>Pick one or more. You can change this later.</p>
+   <div class="wiz__opts" id="wiz-topics" role="group" aria-labelledby="wiz-t3"></div>
+   <div class="wiz__bar"><div class="wiz__dots" aria-hidden="true"><i></i><i></i><i class="on"></i></div><span style="display:flex;gap:10px;flex-wrap:wrap"><button class="wiz__skip" type="button" data-back>Back</button><button class="btn btn--spark" type="button" id="wiz-go" disabled>Show my picks</button></span></div>
+  </div>
+ </div>
+</div>
 <nav class="dots" id="dots" aria-label="Slides"></nav>
 <div class="count" id="count" aria-hidden="true">01 / 01</div>
 <header class="nav">
@@ -227,7 +280,7 @@ details[open] p{animation:rise .4s var(--pop)}
   <div>
    <p class="kick">Learn chemistry by playing</p>
    <h1>Chemistry that feels like <span class="swap" id="swap">a game</span></h1>
-   <p class="lede">Self-paced study hubs for pharmacy courses, chemistry games you can play with your hands, and step-by-step tools for drug design. One link to everything.</p>
+   <p class="lede">Self-paced study hubs for pharmacy courses, fun chemistry games with interactive gesture play, and step-by-step tools for drug design. One link to everything.</p>
    <div class="cta"><a class="btn btn--spark" href="#explore">Explore all hubs</a><a class="btn btn--ghost" href="#how">How it works</a></div>
    <p class="who">Dr. Nur 'Ainun Mokhtar &middot; Faculty of Pharmacy, UiTM Bertam, Penang</p>
   </div>
@@ -236,7 +289,7 @@ details[open] p{animation:rise .4s var(--pop)}
  <div class="hint" aria-hidden="true">Scroll</div>
 </section>
 
-<div class="marquee" style="scroll-snap-align:none" aria-hidden="true"><div><span>Study hubs</span><span>&#9733;</span><span>Games</span><span>&#9733;</span><span>Drug design tools</span><span>&#9733;</span><span>Play with your hands</span><span>&#9733;</span><span>Study hubs</span><span>&#9733;</span><span>Games</span><span>&#9733;</span><span>Drug design tools</span><span>&#9733;</span><span>Play with your hands</span><span>&#9733;</span></div></div>
+<div class="marquee" style="scroll-snap-align:none" aria-hidden="true"><div><span>Study hubs</span><span>&#9733;</span><span>Games</span><span>&#9733;</span><span>Drug design tools</span><span>&#9733;</span><span>Interactive gesture play</span><span>&#9733;</span><span>Study hubs</span><span>&#9733;</span><span>Games</span><span>&#9733;</span><span>Drug design tools</span><span>&#9733;</span><span>Interactive gesture play</span><span>&#9733;</span></div></div>
 
 
 <section class="stats slide slide--alt" id="numbers" data-t="Numbers">
@@ -265,30 +318,32 @@ details[open] p{animation:rise .4s var(--pop)}
  <section class="s slide slide--alt" id="explore" data-t="Explore"><div class="wrap">
   <p class="eyebrow">What is inside</p>
   <h2>Pick your path</h2>
-  <p class="sub">Choose who you are. We will show you the best place to start.</p>
+  <p class="sub">Use the tabs to look around, or tap "Change my path" to pick again.</p>
   <div class="tabs" role="tablist" aria-label="Audience">
    <button class="tab" role="tab" aria-selected="true" data-aud="all" type="button">All</button>
    <button class="tab" role="tab" aria-selected="false" data-aud="uitm" type="button">UiTM</button>
    <button class="tab" role="tab" aria-selected="false" data-aud="public" type="button">Public</button>
    <button class="tab" role="tab" aria-selected="false" data-aud="stem" type="button">STEM</button>
+   <button class="tab tab--picks" id="tab-picks" role="tab" aria-selected="false" data-aud="picks" type="button" hidden>My picks</button>
+   <button class="tab tab--change" id="change-path" type="button">Change my path</button>
   </div>
   <p class="aud-note" id="aud-note" aria-live="polite">Everything in one place.</p>
   <div class="grid" id="grid">
-     <a class="card" data-aud="uitm" href="https://drenoun.github.io/phd115-nam/" target="_blank" rel="noopener"><span class="tile" aria-hidden="true"><i>PHD</i><b>115</b></span><span class="t"><strong>PHD115 Study Hub</strong><span class="d">Fundamentals of Chemistry. Warm-ups, slides, after-class checks, tutorials and games for every chapter.</span><span class="tag">Diploma in Pharmacy</span></span></a>
-     <a class="card" data-aud="uitm" href="https://drenoun.github.io/phd125-nam/" target="_blank" rel="noopener"><span class="tile" aria-hidden="true"><i>PHD</i><b>125</b></span><span class="t"><strong>PHD125 Study Hub</strong><span class="d">Pharmaceutical Organic Chemistry. Eight chapters with slides, tutorials and games.</span><span class="tag">Diploma in Pharmacy</span></span></a>
-     <a class="card" data-aud="uitm" href="https://drenoun.github.io/dr-nam-virtual-secret-lab/" target="_blank" rel="noopener"><span class="tile" aria-hidden="true"><i>Lab</i><b>Sl</b></span><span class="t"><strong>Virtual Secret Lab</strong><span class="d">Hand-gesture chemistry games: build Lewis structures and molecules with your webcam, mouse or touch.</span><span class="tag">Game · BM / EN</span></span></a>
-     <a class="card" data-aud="uitm" href="https://drenoun.github.io/drnam-chemquest-world/" target="_blank" rel="noopener"><span class="tile" aria-hidden="true"><i>9W</i><b>Cq</b></span><span class="t"><strong>Dr. NAM's ChemQuest</strong><span class="d">Pixel-style adventure across nine worlds: match names, formulae and shapes, serve ionic compounds and balance equations.</span><span class="tag">Game · PHD115</span></span></a>
-     <a class="card" data-aud="uitm" href="https://drenoun.github.io/Functional-group-game/" target="_blank" rel="noopener"><span class="tile" aria-hidden="true"><i>P2</i><b>Rr</b></span><span class="t"><strong>Rune Rush Arcade</strong><span class="d">Arcade game on functional groups for PHD125 Lab Practical 2.</span><span class="tag">Game · PHD125</span></span></a>
-     <a class="card" data-aud="uitm" href="https://drenoun.github.io/medsafetygame/" target="_blank" rel="noopener"><span class="tile" aria-hidden="true"><i>Rx</i><b>Ms</b></span><span class="t"><strong>Pharmacy Safety Hunt</strong><span class="d">Spot the medication safety errors before they reach the patient.</span><span class="tag">Game</span></span></a>
-     <a class="card" data-aud="uitm" href="https://drenoun.github.io/geminicanvas/" target="_blank" rel="noopener"><span class="tile" aria-hidden="true"><i>AI</i><b>Gc</b></span><span class="t"><strong>Gemini Canvas for Educators</strong><span class="d">Workshop: turn a teaching idea into an interactive, no-code learning activity, with sources from NotebookLM.</span><span class="tag">Workshop</span></span></a>
-     <a class="card" data-aud="uitm" href="https://drenoun.github.io/Review-Paper-Prompt-Builder/" target="_blank" rel="noopener"><span class="tile" aria-hidden="true"><i>AI</i><b>Rp</b></span><span class="t"><strong>Review Paper Prompt Builder</strong><span class="d">Build structured AI prompts for planning and writing a review paper.</span><span class="tag">Research tool</span></span></a>
-     <a class="card" data-aud="public" href="https://drenoun.github.io/drnam_chemistry_around_you/" target="_blank" rel="noopener"><span class="tile" aria-hidden="true"><i>Daily</i><b>Ca</b></span><span class="t"><strong>Chemistry Around You</strong><span class="d">Everyday life explained through simple chemistry. No science background needed.</span><span class="tag">Science for everyone</span></span></a>
-     <a class="card" data-aud="public" href="https://drenoun.github.io/misiakademikgame/" target="_blank" rel="noopener"><span class="tile" aria-hidden="true"><i>Dip</i><b>Pq</b></span><span class="t"><strong>Pharmacy Quest</strong><span class="d">Career Carnival game: learn what pharmacists do and discover the Diploma in Pharmacy at UiTM Bertam.</span><span class="tag">Game · Career</span></span></a>
-     <a class="card" data-aud="public" href="https://drenoun.github.io/cadd-with-drnam/" target="_blank" rel="noopener"><span class="tile" aria-hidden="true"><i>CADD</i><b>Cd</b></span><span class="t"><strong>CADD with Dr. NAM</strong><span class="d">Interactive simulations of computer-aided drug design: docking, virtual screening, ADME and homology modelling.</span><span class="tag">Drug design</span></span></a>
-     <a class="card" data-aud="public" href="https://drenoun.github.io/NAM-DOCKeasy/" target="_blank" rel="noopener"><span class="tile" aria-hidden="true"><i>Dock</i><b>De</b></span><span class="t"><strong>NAM-DOCKeasy</strong><span class="d">A step-by-step framework for running molecular docking.</span><span class="tag">Research tool</span></span></a>
-     <a class="card" data-aud="public" href="https://drenoun.github.io/NAM-NPeasy/" target="_blank" rel="noopener"><span class="tile" aria-hidden="true"><i>Net</i><b>Np</b></span><span class="t"><strong>NAM-NPeasy</strong><span class="d">Beginner's guide to network pharmacology for herbal and natural products.</span><span class="tag">Research tool</span></span></a>
-     <a class="card" data-aud="stem" href="https://drenoun.github.io/stemdesignthinking/" target="_blank" rel="noopener"><span class="tile" aria-hidden="true"><i>MYIO</i><b>Dt</b></span><span class="t"><strong>Kaedah Inovasi: Design Thinking</strong><span class="d">Slides, four games and printable notes, made for the 14th MYIO 2026 Karnival Mini STEM.</span><span class="tag">Innovation · BM</span></span></a>
-     <a class="card" data-aud="stem" href="https://drenoun.github.io/molecule-drop/" target="_blank" rel="noopener"><span class="tile" aria-hidden="true"><i>Game</i><b>Md</b></span><span class="t"><strong>Molecule Drop</strong><span class="d">Falling-block game on atoms, bonding, molecular shapes and functional groups, from beginner to professor level.</span><span class="tag">Game</span></span></a>
+     <a class="card" data-aud="uitm" data-topics="phd115" href="https://drenoun.github.io/phd115-nam/" target="_blank" rel="noopener"><span class="tile" aria-hidden="true"><i>PHD</i><b>115</b></span><span class="t"><strong>PHD115 Study Hub</strong><span class="d">Fundamentals of Chemistry. Warm-ups, slides, after-class checks, tutorials and games for every chapter.</span><span class="tag">Diploma in Pharmacy</span></span></a>
+     <a class="card" data-aud="uitm" data-topics="phd125" href="https://drenoun.github.io/phd125-nam/" target="_blank" rel="noopener"><span class="tile" aria-hidden="true"><i>PHD</i><b>125</b></span><span class="t"><strong>PHD125 Study Hub</strong><span class="d">Pharmaceutical Organic Chemistry. Eight chapters with slides, tutorials and games.</span><span class="tag">Diploma in Pharmacy</span></span></a>
+     <a class="card" data-aud="uitm" data-topics="games phd115" href="https://drenoun.github.io/dr-nam-virtual-secret-lab/" target="_blank" rel="noopener"><span class="tile" aria-hidden="true"><i>Lab</i><b>Sl</b></span><span class="t"><strong>Virtual Secret Lab</strong><span class="d">Interactive gesture play: build Lewis structures and molecules with your webcam, mouse or touch.</span><span class="tag">Game · BM / EN</span></span></a>
+     <a class="card" data-aud="uitm" data-topics="games phd115" href="https://drenoun.github.io/drnam-chemquest-world/" target="_blank" rel="noopener"><span class="tile" aria-hidden="true"><i>9W</i><b>Cq</b></span><span class="t"><strong>Dr. NAM's ChemQuest</strong><span class="d">Pixel-style adventure across nine worlds: match names, formulae and shapes, serve ionic compounds and balance equations.</span><span class="tag">Game · PHD115</span></span></a>
+     <a class="card" data-aud="uitm" data-topics="games phd125" href="https://drenoun.github.io/Functional-group-game/" target="_blank" rel="noopener"><span class="tile" aria-hidden="true"><i>P2</i><b>Rr</b></span><span class="t"><strong>Rune Rush Arcade</strong><span class="d">Arcade game on functional groups for PHD125 Lab Practical 2.</span><span class="tag">Game · PHD125</span></span></a>
+     <a class="card" data-aud="uitm" data-topics="safety games" href="https://drenoun.github.io/medsafetygame/" target="_blank" rel="noopener"><span class="tile" aria-hidden="true"><i>Rx</i><b>Ms</b></span><span class="t"><strong>Pharmacy Safety Hunt</strong><span class="d">Spot the medication safety errors before they reach the patient.</span><span class="tag">Game</span></span></a>
+     <a class="card" data-aud="uitm" data-topics="teach" href="https://drenoun.github.io/geminicanvas/" target="_blank" rel="noopener"><span class="tile" aria-hidden="true"><i>AI</i><b>Gc</b></span><span class="t"><strong>Gemini Canvas for Educators</strong><span class="d">Workshop: turn a teaching idea into an interactive, no-code learning activity, with sources from NotebookLM.</span><span class="tag">Workshop</span></span></a>
+     <a class="card" data-aud="uitm" data-topics="teach research" href="https://drenoun.github.io/Review-Paper-Prompt-Builder/" target="_blank" rel="noopener"><span class="tile" aria-hidden="true"><i>AI</i><b>Rp</b></span><span class="t"><strong>Review Paper Prompt Builder</strong><span class="d">Build structured AI prompts for planning and writing a review paper.</span><span class="tag">Research tool</span></span></a>
+     <a class="card" data-aud="public" data-topics="daily" href="https://drenoun.github.io/drnam_chemistry_around_you/" target="_blank" rel="noopener"><span class="tile" aria-hidden="true"><i>Daily</i><b>Ca</b></span><span class="t"><strong>Chemistry Around You</strong><span class="d">Everyday life explained through simple chemistry. No science background needed.</span><span class="tag">Science for everyone</span></span></a>
+     <a class="card" data-aud="public" data-topics="career games" href="https://drenoun.github.io/misiakademikgame/" target="_blank" rel="noopener"><span class="tile" aria-hidden="true"><i>Dip</i><b>Pq</b></span><span class="t"><strong>Pharmacy Quest</strong><span class="d">Career Carnival game: learn what pharmacists do and discover the Diploma in Pharmacy at UiTM Bertam.</span><span class="tag">Game · Career</span></span></a>
+     <a class="card" data-aud="public" data-topics="research" href="https://drenoun.github.io/cadd-with-drnam/" target="_blank" rel="noopener"><span class="tile" aria-hidden="true"><i>CADD</i><b>Cd</b></span><span class="t"><strong>CADD with Dr. NAM</strong><span class="d">Interactive simulations of computer-aided drug design: docking, virtual screening, ADME and homology modelling.</span><span class="tag">Drug design</span></span></a>
+     <a class="card" data-aud="public" data-topics="research" href="https://drenoun.github.io/NAM-DOCKeasy/" target="_blank" rel="noopener"><span class="tile" aria-hidden="true"><i>Dock</i><b>De</b></span><span class="t"><strong>NAM-DOCKeasy</strong><span class="d">A step-by-step framework for running molecular docking.</span><span class="tag">Research tool</span></span></a>
+     <a class="card" data-aud="public" data-topics="research" href="https://drenoun.github.io/NAM-NPeasy/" target="_blank" rel="noopener"><span class="tile" aria-hidden="true"><i>Net</i><b>Np</b></span><span class="t"><strong>NAM-NPeasy</strong><span class="d">Beginner's guide to network pharmacology for herbal and natural products.</span><span class="tag">Research tool</span></span></a>
+     <a class="card" data-aud="stem" data-topics="innovate" href="https://drenoun.github.io/stemdesignthinking/" target="_blank" rel="noopener"><span class="tile" aria-hidden="true"><i>MYIO</i><b>Dt</b></span><span class="t"><strong>Kaedah Inovasi: Design Thinking</strong><span class="d">Slides, four games and printable notes, made for the 14th MYIO 2026 Karnival Mini STEM.</span><span class="tag">Innovation · BM</span></span></a>
+     <a class="card" data-aud="stem" data-topics="games" href="https://drenoun.github.io/molecule-drop/" target="_blank" rel="noopener"><span class="tile" aria-hidden="true"><i>Game</i><b>Md</b></span><span class="t"><strong>Molecule Drop</strong><span class="d">Falling-block game on atoms, bonding, molecular shapes and functional groups, from beginner to professor level.</span><span class="tag">Game</span></span></a>
   </div>
  </div></section>
 
@@ -331,12 +386,12 @@ details[open] p{animation:rise .4s var(--pop)}
 (function(){
   var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
   var notes={all:"Everything in one place.",uitm:"For my students and fellow lecturers.",public:"Open to anyone: future pharmacy students, researchers and the curious.",stem:"Hands-on activities for schools and STEM events."};
-  var tabs=[].slice.call(document.querySelectorAll('.tab')),cards=[].slice.call(document.querySelectorAll('.card')),note=document.getElementById('aud-note');
+  var tabs=[].slice.call(document.querySelectorAll('.tab[data-aud]')),cards=[].slice.call(document.querySelectorAll('.card')),note=document.getElementById('aud-note');
   function pop(){var n=0;cards.forEach(function(c){c.classList.remove('pop');if(!c.hidden){c.style.setProperty('--i',n++);void c.offsetWidth;c.classList.add('pop')}})}
   tabs.forEach(function(t){t.addEventListener('click',function(){
     var a=t.dataset.aud;
     tabs.forEach(function(x){x.setAttribute('aria-selected',x===t)});
-    cards.forEach(function(c){c.hidden=a!=='all'&&c.dataset.aud!==a});
+    cards.forEach(function(c){c.hidden=a==='picks'?c.dataset.pick!=='1':(a!=='all'&&c.dataset.aud!==a)});
     note.textContent=notes[a];
     if(!reduce)pop();
   })});
@@ -359,6 +414,61 @@ details[open] p{animation:rise .4s var(--pop)}
     els.forEach(function(e){io.observe(e)});
   }
   cards.forEach(function(c){c.addEventListener('transitionend',function f(e){if(e.propertyName==='transform'&&c.classList.contains('in')){c.classList.remove('rv','in');c.removeEventListener('transitionend',f)}})});
+
+
+  /* ===== welcome wizard ===== */
+  var KEY='drnam-main:path:v1';
+  var ROLES=[
+    {id:'student',t:'UiTM student',d:'I study PHD115 or PHD125',topics:['phd115','phd125','games','safety']},
+    {id:'lecturer',t:'Lecturer or teacher',d:'I teach and do research',topics:['teach','research','games','innovate']},
+    {id:'public',t:'Curious person',d:'I like to learn new things',topics:['daily','career','games','research']},
+    {id:'school',t:'School or STEM event',d:'Fun activities for young learners',topics:['games','innovate','daily','career']}
+  ];
+  var TOPICS={
+    phd115:['Fundamentals of Chemistry','PHD115: atoms, bonding and more'],
+    phd125:['Organic Chemistry','PHD125: carbon compounds and groups'],
+    games:['Fun chemistry games','Learn by playing'],
+    safety:['Medication safety','Keep patients safe'],
+    teach:['Teaching ideas','Make learning activities'],
+    research:['Drug design and research','Docking, screening and more'],
+    innovate:['Design thinking','Make new ideas step by step'],
+    daily:['Chemistry in daily life','Science around you'],
+    career:['Careers in pharmacy','What do pharmacists do?']
+  };
+  var wiz=document.getElementById('wiz'),steps=[].slice.call(wiz.querySelectorAll('.wiz__step')),role=null,picked={};
+  var tabPicks=document.getElementById('tab-picks');
+  function store(v){try{if(v===undefined)return JSON.parse(localStorage.getItem(KEY)||'null');localStorage.setItem(KEY,JSON.stringify(v))}catch(e){return null}}
+  function go(n){steps.forEach(function(st){st.classList.toggle('on',st.dataset.step==n)});var f=wiz.querySelector('.wiz__step.on button,.wiz__step.on .opt');if(f)f.focus({preventScroll:true})}
+  function open(){wiz.hidden=false;document.documentElement.style.overflow='hidden';go(1)}
+  function close(){wiz.hidden=true;document.documentElement.style.overflow=''}
+  function mk(txt,small,pressed,roleAttr){var b=document.createElement('button');b.type='button';b.className='opt';b.innerHTML='<strong></strong><small></small>';b.firstChild.textContent=txt;b.lastChild.textContent=small;if(roleAttr){b.setAttribute('role','radio');b.setAttribute('aria-checked','false')}else b.setAttribute('aria-pressed','false');return b}
+  var rbox=document.getElementById('wiz-roles'),tbox=document.getElementById('wiz-topics'),goBtn=document.getElementById('wiz-go');
+  ROLES.forEach(function(r){var b=mk(r.t,r.d,false,true);b.addEventListener('click',function(){
+    role=r;picked={};[].slice.call(rbox.children).forEach(function(x){x.setAttribute('aria-checked',x===b)});
+    tbox.innerHTML='';r.topics.forEach(function(k){var tb=mk(TOPICS[k][0],TOPICS[k][1],false);tb.addEventListener('click',function(){picked[k]=!picked[k];tb.setAttribute('aria-pressed',!!picked[k]);goBtn.disabled=!Object.keys(picked).some(function(x){return picked[x]})});tbox.appendChild(tb)});
+    goBtn.disabled=true;setTimeout(function(){go(3)},220)});rbox.appendChild(b)});
+  wiz.addEventListener('click',function(e){var t=e.target;
+    if(t.closest('[data-next]'))go(2);
+    if(t.closest('[data-skip]'))close();
+    if(t.closest('[data-back]'))go(2);
+  });
+  document.addEventListener('keydown',function(e){if(wiz.hidden)return;if(e.key==='Escape')close();
+    if(e.key==='Tab'){var f=[].slice.call(wiz.querySelectorAll('.wiz__step.on button:not([disabled])'));if(!f.length)return;var a=f[0],z=f[f.length-1];
+      if(e.shiftKey&&document.activeElement===a){z.focus();e.preventDefault()}else if(!e.shiftKey&&document.activeElement===z){a.focus();e.preventDefault()}}},true);
+  function applyPicks(sel,silent){
+    var keys=Object.keys(sel).filter(function(k){return sel[k]});if(!keys.length)return;
+    cards.forEach(function(c){var tp=(c.dataset.topics||'').split(' ');c.dataset.pick=keys.some(function(k){return tp.indexOf(k)>-1})?'1':'0'});
+    notes.picks='Picked for you'+(role?' ('+role.t+')':'')+': '+keys.map(function(k){return TOPICS[k][0]}).join(', ')+'.';
+    tabPicks.hidden=false;
+    tabPicks.click();
+    if(!silent)document.getElementById('explore').scrollIntoView({behavior:reduce?'auto':'smooth'});
+  }
+  goBtn.addEventListener('click',function(){store({role:role.id,picked:picked});close();applyPicks(picked)});
+  document.getElementById('change-path').addEventListener('click',open);
+  var saved=store();
+  if(saved){role=ROLES.filter(function(r){return r.id===saved.role})[0]||null;picked=saved.picked||{};applyPicks(picked,true);
+    tabs.forEach(function(x){x.setAttribute('aria-selected',x===tabPicks)})}
+  else setTimeout(open,400);
 
   /* count-up numbers */
   document.querySelectorAll('[data-count]').forEach(function(el){
