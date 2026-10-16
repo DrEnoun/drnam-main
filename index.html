@@ -130,13 +130,64 @@ footer{margin-top:64px;border-top:1px solid var(--line)}
 footer .wrap{padding-block:20px 28px;color:var(--muted);font-size:.86rem;display:flex;flex-wrap:wrap;gap:6px 18px;justify-content:space-between}
 footer b{color:var(--ink)}
 
-.rv{opacity:0;transform:translateY(14px);transition:opacity .5s,transform .5s}
+/* ===== motion: pop + flow ===== */
+:root{--pop:cubic-bezier(.34,1.56,.64,1)}
+.progress{position:fixed;top:0;left:0;height:4px;width:100%;background:var(--spark);transform-origin:0 50%;transform:scaleX(0);z-index:20}
+.rv{opacity:0;transform:translateY(40px) scale(.92);transition:opacity .5s ease,transform .7s var(--pop);transition-delay:calc(var(--i,0)*70ms)}
 .rv.in{opacity:1;transform:none}
-@media (prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}.card,.btn{transition:none}.card:hover,.btn--spark:hover{transform:none}html{scroll-behavior:auto}}
+.hero .wrap>div:first-child>*{animation:rise .8s var(--pop) both}
+.hero .wrap>div:first-child>*:nth-child(2){animation-delay:.1s}
+.hero .wrap>div:first-child>*:nth-child(3){animation-delay:.2s}
+.hero .wrap>div:first-child>*:nth-child(4){animation-delay:.3s}
+.hero .wrap>div:first-child>*:nth-child(5){animation-delay:.4s}
+@keyframes rise{from{opacity:0;transform:translateY(36px) scale(.94)}to{opacity:1;transform:none}}
+.badge{animation:badgein 1s var(--pop) .2s both,bob 5s ease-in-out 1.2s infinite}
+@keyframes badgein{from{opacity:0;transform:scale(.4) rotate(-14deg)}to{opacity:1;transform:none}}
+@keyframes bob{50%{transform:translateY(-12px) rotate(2deg)}}
+.swap{display:inline-block;color:var(--spark);position:relative}
+.swap.out{animation:swapout .25s ease forwards}
+.swap.inn{animation:swapin .45s var(--pop) both}
+@keyframes swapout{to{opacity:0;transform:translateY(-.3em) scale(.9)}}
+@keyframes swapin{from{opacity:0;transform:translateY(.4em) scale(.9)}to{opacity:1;transform:none}}
+.atoms{position:absolute;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.atom{position:absolute;left:var(--x);top:var(--y);width:var(--s);height:var(--s);border-radius:50%;background:var(--c);opacity:.5;animation:float var(--d) ease-in-out var(--dl,0s) infinite;transform:translate(calc(var(--mx,0)*var(--k)*1px),calc(var(--my,0)*var(--k)*1px))}
+@keyframes float{50%{margin-top:-26px;margin-left:12px}}
+.glow{position:absolute;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,rgba(212,255,58,.16),transparent 65%);left:var(--gx,70%);top:var(--gy,30%);transform:translate(-50%,-50%);pointer-events:none;z-index:0;transition:left .25s ease-out,top .25s ease-out}
+.btn--spark{animation:pulse 2.4s ease-in-out 2s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(212,255,58,.5)}50%{box-shadow:0 0 0 14px rgba(212,255,58,0)}}
+.btn:active{transform:scale(.94)}
+.marquee{background:var(--spark);color:var(--on-spark);overflow:hidden;white-space:nowrap;transform:rotate(-1.2deg);margin:-8px -10px 0;position:relative;z-index:2}
+.marquee div{display:inline-block;padding:10px 0;font:800 1.05rem var(--font-display);letter-spacing:.06em;text-transform:uppercase;animation:slide 28s linear infinite}
+.marquee span{margin:0 18px}
+@keyframes slide{to{transform:translateX(-50%)}}
+.step{transition:transform .35s var(--pop),border-color .2s}
+.step:hover{transform:translateY(-8px) rotate(-1deg);border-color:var(--teal)}
+.step .n{transition:transform .5s var(--pop)}
+.step:hover .n{transform:rotate(360deg) scale(1.15)}
+.card{transition:transform .35s var(--pop),border-color .2s,box-shadow .2s}
+.card:hover,.card:focus-visible{transform:translateY(-6px) scale(1.02);box-shadow:0 14px 30px rgba(11,26,38,.16)}
+.card.pop{animation:cardpop .6s var(--pop) backwards;animation-delay:calc(var(--i,0)*45ms)}
+@keyframes cardpop{from{opacity:0;transform:scale(.6) translateY(24px)}to{opacity:1;transform:none}}
+.tile{transition:transform .4s var(--pop),background .2s}
+.card:hover .tile{transform:rotate(-8deg) scale(1.12);background:var(--spark);color:var(--on-spark)}
+.tab{transition:transform .25s var(--pop),background .2s,color .2s}
+.tab:hover{transform:translateY(-3px)}
+.tab:active{transform:scale(.92)}
+.s h2{background:linear-gradient(var(--spark),var(--spark)) 0 92%/0 .22em no-repeat;transition:background-size .8s ease .2s;display:inline}
+.s h2.in-view{background-size:100% .22em}
+.stat b{display:block}
+details{transition:border-color .2s,transform .3s var(--pop)}
+details[open]{border-color:var(--teal);transform:scale(1.01)}
+details[open] p{animation:rise .4s var(--pop)}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .rv{opacity:1;transform:none}html{scroll-behavior:auto}.marquee div{animation:none}.progress{display:none}
+}
 </style>
 </head>
 <body>
 
+<div class="progress" id="progress" aria-hidden="true"></div>
 <header class="nav">
  <div class="wrap">
   <a class="brand" href="#top"><img src="img/drnam-180.png" alt="">Chemistry with Dr. NAM</a>
@@ -145,10 +196,13 @@ footer b{color:var(--ink)}
 </header>
 
 <section class="hero" id="top">
+ <div class="atoms" id="atoms" aria-hidden="true"><i class="glow"></i>
+  <i class="atom" style="--x:6%;--y:18%;--s:38px;--c:#D4FF3A;--d:6s;--k:.04"></i><i class="atom" style="--x:42%;--y:72%;--s:22px;--c:#4CC9BD;--d:5s;--dl:-1s;--k:-.06"></i><i class="atom" style="--x:58%;--y:12%;--s:16px;--c:#D4FF3A;--d:7s;--dl:-2s;--k:.08"></i><i class="atom" style="--x:90%;--y:64%;--s:44px;--c:#4CC9BD;--d:8s;--dl:-3s;--k:-.03"></i><i class="atom" style="--x:76%;--y:8%;--s:26px;--c:#EEF6F4;--d:6.5s;--dl:-1.5s;--k:.05"></i><i class="atom" style="--x:20%;--y:84%;--s:30px;--c:#D4FF3A;--d:7.5s;--dl:-4s;--k:-.07"></i>
+ </div>
  <div class="wrap">
   <div>
    <p class="kick">Learn chemistry by playing</p>
-   <h1>Chemistry that feels like <span>a game</span></h1>
+   <h1>Chemistry that feels like <span class="swap" id="swap">a game</span></h1>
    <p class="lede">Self-paced study hubs for pharmacy courses, chemistry games you can play with your hands, and step-by-step tools for drug design. One link to everything.</p>
    <div class="cta"><a class="btn btn--spark" href="#explore">Explore all hubs</a><a class="btn btn--ghost" href="#how">How it works</a></div>
    <p class="who">Dr. Nur 'Ainun Mokhtar &middot; Faculty of Pharmacy, UiTM Bertam, Penang</p>
@@ -157,10 +211,12 @@ footer b{color:var(--ink)}
  </div>
 </section>
 
+<div class="marquee" aria-hidden="true"><div><span>Study hubs</span><span>&#9733;</span><span>Games</span><span>&#9733;</span><span>Drug design tools</span><span>&#9733;</span><span>Play with your hands</span><span>&#9733;</span><span>Study hubs</span><span>&#9733;</span><span>Games</span><span>&#9733;</span><span>Drug design tools</span><span>&#9733;</span><span>Play with your hands</span><span>&#9733;</span></div></div>
+
 <div class="stats">
  <div class="wrap">
-  <div class="stat"><b>15</b><span>hubs, games and tools</span></div>
-  <div class="stat"><b>3</b><span>paths: UiTM, Public, STEM</span></div>
+  <div class="stat"><b data-count="15">15</b><span>hubs, games and tools</span></div>
+  <div class="stat"><b data-count="3">3</b><span>paths: UiTM, Public, STEM</span></div>
   <div class="stat"><b>BM + EN</b><span>languages</span></div>
   <div class="stat"><b>Free</b><span>no login needed</span></div>
  </div>
@@ -173,9 +229,9 @@ footer b{color:var(--ink)}
   <h2>Three simple steps</h2>
   <p class="sub">Think of it like a gym for your brain. First you learn the moves, then you practise, then you try the real thing.</p>
   <div class="steps">
-   <div class="step rv"><span class="n">1</span><h3>Learn</h3><p>Open a study hub. Read the slides and warm-ups, one chapter at a time.</p></div>
-   <div class="step rv"><span class="n">2</span><h3>Play</h3><p>Try a game. Repeating ideas in a game helps them stick in your memory.</p></div>
-   <div class="step rv"><span class="n">3</span><h3>Explore</h3><p>Use the research tools to try real drug design, step by step.</p></div>
+   <div class="step rv" style="--i:0"><span class="n">1</span><h3>Learn</h3><p>Open a study hub. Read the slides and warm-ups, one chapter at a time.</p></div>
+   <div class="step rv" style="--i:1"><span class="n">2</span><h3>Play</h3><p>Try a game. Repeating ideas in a game helps them stick in your memory.</p></div>
+   <div class="step rv" style="--i:2"><span class="n">3</span><h3>Explore</h3><p>Use the research tools to try real drug design, step by step.</p></div>
   </div>
  </section>
 
@@ -246,19 +302,56 @@ footer b{color:var(--ink)}
 
 <script>
 (function(){
+  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
   var notes={all:"Everything in one place.",uitm:"For my students and fellow lecturers.",public:"Open to anyone: future pharmacy students, researchers and the curious.",stem:"Hands-on activities for schools and STEM events."};
   var tabs=[].slice.call(document.querySelectorAll('.tab')),cards=[].slice.call(document.querySelectorAll('.card')),note=document.getElementById('aud-note');
+  function pop(){var n=0;cards.forEach(function(c){c.classList.remove('pop');if(!c.hidden){c.style.setProperty('--i',n++);void c.offsetWidth;c.classList.add('pop')}})}
   tabs.forEach(function(t){t.addEventListener('click',function(){
     var a=t.dataset.aud;
     tabs.forEach(function(x){x.setAttribute('aria-selected',x===t)});
     cards.forEach(function(c){c.hidden=a!=='all'&&c.dataset.aud!==a});
     note.textContent=notes[a];
+    if(!reduce)pop();
   })});
-  var els=document.querySelectorAll('.rv');
-  if(!('IntersectionObserver' in window)){els.forEach(function(e){e.classList.add('in')});return}
-  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.15});
-  els.forEach(function(e){io.observe(e)});
+
+  /* scroll progress bar */
+  var bar=document.getElementById('progress');
+  function prog(){var h=document.documentElement;bar.style.transform='scaleX('+(h.scrollTop/((h.scrollHeight-h.clientHeight)||1))+')'}
+  addEventListener('scroll',prog,{passive:true});prog();
+
+  /* reveal on scroll, cards pop in a wave */
+  var grid=document.getElementById('grid');
+  cards.forEach(function(c,i){c.classList.add('rv');c.style.setProperty('--i',i%3)});
+  var els=document.querySelectorAll('.rv,.s h2');
+  function show(e){e.classList.add(e.matches('h2')?'in-view':'in')}
+  if(reduce||!('IntersectionObserver' in window)){els.forEach(show)}
+  else{
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){show(e.target);io.unobserve(e.target)}})},{threshold:.15});
+    els.forEach(function(e){io.observe(e)});
+  }
+  cards.forEach(function(c){c.addEventListener('transitionend',function f(e){if(e.propertyName==='transform'&&c.classList.contains('in')){c.classList.remove('rv','in');c.removeEventListener('transitionend',f)}})});
+
+  /* count-up numbers */
+  document.querySelectorAll('[data-count]').forEach(function(el){
+    var end=+el.dataset.count;if(reduce||!('IntersectionObserver' in window))return;
+    var o=new IntersectionObserver(function(es){if(!es[0].isIntersecting)return;o.disconnect();var t0=performance.now();
+      (function step(t){var p=Math.min((t-t0)/1200,1),e=1-Math.pow(1-p,3);el.textContent=Math.round(end*e);if(p<1)requestAnimationFrame(step)})(t0)},{threshold:.6});
+    o.observe(el);
+  });
+
+  if(reduce)return;
+  /* rotating word in headline */
+  var words=['a game','a lab','an adventure','a story'],wi=0,sw=document.getElementById('swap');
+  setInterval(function(){sw.className='swap out';setTimeout(function(){wi=(wi+1)%words.length;sw.textContent=words[wi];sw.className='swap inn'},250)},2600);
+
+  /* hero: floating atoms follow the mouse (parallax) + glow */
+  var hero=document.getElementById('top'),at=document.getElementById('atoms');
+  hero.addEventListener('mousemove',function(e){var r=hero.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;
+    at.style.setProperty('--mx',x-r.width/2);at.style.setProperty('--my',y-r.height/2);
+    var g=at.querySelector('.glow');g.style.setProperty('--gx',x+'px');g.style.setProperty('--gy',y+'px')});
+  document.querySelectorAll('.atom').forEach(function(a){a.parentNode.style.setProperty('--mx',0);a.parentNode.style.setProperty('--my',0)});
 })();
 </script>
+
 </body>
 </html>
