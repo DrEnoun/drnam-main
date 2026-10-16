@@ -25,10 +25,10 @@ function doPost(e) {
     var ss = SpreadsheetApp.getActiveSpreadsheet();
     var sh = ss.getSheetByName(SHEET_NAME) || ss.insertSheet(SHEET_NAME);
     if (sh.getLastRow() === 0) {
-      sh.appendRow(['Time', 'Rating (1-5)', 'I am', 'What I liked', 'What can be better', 'Wants to learn more about', 'Contact (optional)', 'Page']);
+      sh.appendRow(['Time', 'Rating (1-5)', 'Would recommend', 'I am', 'What I liked', 'What can be better', 'Wants to learn more about', 'Contact (optional)', 'Page']);
       sh.setFrozenRows(1);
     }
-    sh.appendRow([new Date(), clean_(d.rating, 2), clean_(d.role, 40), clean_(d.liked, 1500), clean_(d.better, 1500), clean_(d.learn, 1500), clean_(d.contact, 200), clean_(d.page, 200)]);
+    sh.appendRow([new Date(), clean_(d.rating, 2), clean_(d.recommend, 300), clean_(d.role, 40), clean_(d.liked, 1500), clean_(d.better, 1500), clean_(d.learn, 1500), clean_(d.contact, 200), clean_(d.page, 200)]);
     return reply_(true);
   } catch (err) {
     return reply_(false);

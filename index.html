@@ -379,6 +379,9 @@ details[open] p{animation:rise .4s var(--pop)}
     <p class="fb__title" style="margin-bottom:4px">Tell me what you think! Pick from the lists, or choose Other and type your own.</p>
     <fieldset><legend>How was your visit?</legend>
      <div class="fb__stars" id="fb-stars" role="radiogroup" aria-label="Rating from 1 to 5 hearts"></div><p class="fb__word" id="fb-word" aria-live="polite"></p></fieldset>
+    <label for="fb-rec">Would you recommend this to others? <span class="opt-hint">(optional)</span></label>
+    <select id="fb-rec" data-other="fb-rec-o"><option value="">Choose one...</option><option>Yes, definitely!</option><option>Yes, to some people</option><option>Not sure yet</option><option>Not yet, it needs more work</option><option value="__other">Other (type your own)</option></select>
+    <input type="text" id="fb-rec-o" class="fb__other" maxlength="300" placeholder="Type your answer" hidden>
     <label for="fb-role">I am a <span class="opt-hint">(optional)</span></label>
     <select id="fb-role" data-other="fb-role-o"><option value="">Choose...</option><option>UiTM student</option><option>Lecturer or teacher</option><option>Curious person</option><option>School or STEM visitor</option><option value="__other">Other (type your own)</option></select>
     <input type="text" id="fb-role-o" class="fb__other" maxlength="60" placeholder="Type who you are" hidden>
@@ -935,12 +938,12 @@ details[open] p{animation:rise .4s var(--pop)}
   function role(){try{var s=JSON.parse(localStorage.getItem('drnam-main:path:v1')||'null');return s&&s.role||''}catch(e){return ''}}
   form.addEventListener('submit',function(e){
     e.preventDefault();if(sending)return;
-    var liked=val('fb-liked'),better=val('fb-better'),learn=val('fb-learn'),miss=otherMissing();
+    var liked=val('fb-liked'),better=val('fb-better'),learn=val('fb-learn'),rec=val('fb-rec'),miss=otherMissing();
     if(miss){msg.className='fb__msg err';msg.textContent='Please type your own answer, or pick one from the list.';document.getElementById(miss.dataset.other).focus();return}
-    if(!rating&&!liked&&!better&&!learn){msg.className='fb__msg err';msg.textContent='Please tap a heart or write a short message.';return}
+    if(!rating&&!liked&&!better&&!learn&&!rec){msg.className='fb__msg err';msg.textContent='Please tap a heart or write a short message.';return}
     if(!FEEDBACK_URL){msg.className='fb__msg err';msg.textContent='Feedback is not connected yet. Please try again later.';return}
     sending=true;var btn=document.getElementById('fb-send');btn.disabled=true;btn.textContent='Sending love...';msg.className='fb__msg';msg.textContent='';
-    var body=JSON.stringify({rating:rating||'',role:val('fb-role'),liked:liked,better:better,learn:learn,contact:val('fb-contact'),website:val('fb-website'),page:'hub '+(role()?'('+role()+') ':'')+innerWidth+'px'});
+    var body=JSON.stringify({rating:rating||'',role:val('fb-role'),liked:liked,better:better,learn:learn,recommend:rec,contact:val('fb-contact'),website:val('fb-website'),page:'hub '+(role()?'('+role()+') ':'')+innerWidth+'px'});
     /* text/plain keeps this a "simple" request, so the browser sends it without a permission check */
     fetch(FEEDBACK_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:body}).then(function(){
       document.getElementById('fb-main').hidden=true;document.getElementById('fb-done').hidden=false;SFX.success();form.reset();[].forEach.call(fb.querySelectorAll('.fb__other'),function(o){o.hidden=true});rating=0;paint();document.getElementById('fb-ok').focus();
